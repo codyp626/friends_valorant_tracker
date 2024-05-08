@@ -71,6 +71,7 @@ h1:focus {
     font-family: Rajdhani;
     font-weight: 700;
     font-size: 1.5rem;
+    min-width: 100px;
 }
 
 .card:hover {
@@ -99,4 +100,17 @@ h1:focus {
 .player {
     text-overflow: ellipsis;
     display: flex;
+}
+
+.mobile_fix {
+    display: flex;
+}
+
+@media only screen and (max-width: 600px) {
+    .mobile_fix {
+        flex-direction: column;
+    }
+    .card {
+        width: auto;
+    }
 }
