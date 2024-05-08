@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "mQr1n1wMCrGWtDOSHwVddqRWLPvRgRxr/FQ4VqC+KQX6GTI89vJDjipw6eHlgtx9M2uFWGeeRfvgUpbBQsMPmQ==",
+  "success": true,
+  "projectFilePath": "C:\\vscode_projects\\friends_valorant_tracker\\FriendsTracker\\FriendsTracker.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\xcody\\.nuget\\packages\\mediatr\\12.2.0\\mediatr.12.2.0.nupkg.sha512",
+    "C:\\Users\\xcody\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
+    "C:\\Users\\xcody\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\xcody\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
