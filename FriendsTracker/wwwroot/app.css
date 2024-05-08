@@ -94,7 +94,8 @@ h1:focus {
     font-size: 1.2rem; 
     align-self: center;
     margin-bottom: 0;
-    margin-right: 10px;
+    /* margin-right: 10px; */
+    width: 18%;
 }
 
 .player {
@@ -102,15 +103,20 @@ h1:focus {
     display: flex;
 }
 
-.mobile_fix {
+.card_container {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-left: 0;
+    margin-right: 0;
+    /* width: 100vw; */
 }
 
-@media only screen and (max-width: 600px) {
-    .mobile_fix {
+/* @media only screen and (max-width: 600px) {
+    .container {
         flex-direction: column;
     }
     .card {
         width: auto;
     }
-}
+} */
