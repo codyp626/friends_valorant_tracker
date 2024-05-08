@@ -37,7 +37,7 @@
 <h3 align="center"Valorant Leaderboard</h3>
 
   <p align="center">
-    A small web app built with react to display my friends ranks in Valorant in a custome leaderboard 
+    A small web app built with react to display my friends ranks in Valorant in a custom leaderboard 
     <br />
     <a href="https://github.com/codyp626/friends_valorant_tracker"><strong>Explore the docs »</strong></a>
     <br />
@@ -82,8 +82,6 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
