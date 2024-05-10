@@ -37,12 +37,12 @@
 <h3 align="center"Valorant Leaderboard</h3>
 
   <p align="center">
-    A small web app built with react to display my friends ranks in Valorant in a custom leaderboard 
+    A small web app built with C# .NET to display my friends ranks in Valorant in a custom leaderboard 
     <br />
     <a href="https://github.com/codyp626/friends_valorant_tracker"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/codyp626/friends_valorant_tracker">View Demo</a>
+    <a href="http://brewt.net/rank">View Live Demo</a>
     ·
     <a href="https://github.com/codyp626/friends_valorant_tracker/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
@@ -90,7 +90,7 @@
 ### Built With
 
 
-* [![C#][learn.microsoft.com/en-us/dotnet/csharp/]][C#-url]
+* [![C#][Csharp.com]][csharp-url]
 * [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -118,13 +118,13 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    git clone https://github.com/codyp626/friends_valorant_tracker.git
    ```
-3. Install NPM packages
+3. Publish with dotnet
    ```sh
-   npm install
+   dotnet publish
    ```
-4. Enter your API in `config.js`
+4. run the dotnet dll in `/bin/Debug/net8.0/`
    ```js
-   const API_KEY = 'ENTER YOUR API';
+   dotnet FriendsTracker.dll;
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -134,9 +134,14 @@ This is an example of how to list things you need to use the software and how to
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+You can replace the string of player "name/tag" in 
+   ```sh
+   friends_valorant_tracker\FriendsTracker\Components\Pages\Ranks.razor.cs
+   ```
+by changing variable to fit your needs
+```sh
+var players = new List<string>()
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -145,10 +150,9 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [ ] MongoDB Integration
+    - [ ] Player KDA, HS%, Winrate
+  - [ ] Damage Delta
 
 See the [open issues](https://github.com/codyp626/friends_valorant_tracker/issues) for a full list of proposed features (and known issues).
 
@@ -197,7 +201,7 @@ Project Link: [https://github.com/codyp626/friends_valorant_tracker](https://git
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* []()
+* [Ben Stroup](https://github.com/bstroup3) for helping me :)
 * []()
 * []()
 
@@ -234,5 +238,7 @@ Project Link: [https://github.com/codyp626/friends_valorant_tracker](https://git
 [Laravel-url]: https://laravel.com
 [Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
 [Bootstrap-url]: https://getbootstrap.com
+[Csharp.com]: https://img.shields.io/badge/Csharp-89CFF0?style=for-the-badge&logo=bootstrap&logoColor=black
+[csharp-url]: https://dotnet.microsoft.com/en-us/languages/csharp
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com 
