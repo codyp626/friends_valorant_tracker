@@ -1,9 +1,16 @@
 ﻿@page "/mongo"
-<h3>Mongo</h3>
+@using FriendsTracker.Components.Pages
 
+<PageTitle>Mongo</PageTitle>
 
+<h1>Mongo</h1>
 
+@* @foreach (var data in ResultList)
+{
+<p>@data</p>
 
-@code {
+} *@
 
-}
+<p>@realResult</p>
+
+<button class="btn btn-primary" @onclick="@ButtonFunction">Click me</button>

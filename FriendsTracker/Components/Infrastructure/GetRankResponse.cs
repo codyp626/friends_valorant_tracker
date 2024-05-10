@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 
 using System.Globalization;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace FriendsTracker.Components.Infrastructure;
 
+[BsonIgnoreExtraElements]
 public partial class GetRankResponse
 {
+
+    [BsonElement ("Status")]
     [JsonProperty("status")]
     public long Status { get; set; }
 
+    [BsonElement ("Data")]
     [JsonProperty("data")]
     public Rank Data { get; set; } = null!;
 }

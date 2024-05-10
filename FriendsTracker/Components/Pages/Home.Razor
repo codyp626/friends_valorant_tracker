@@ -1,8 +1,20 @@
 @page "/"
 
-<a href="/rank">
-GO SEE YOUR RANK
-</a>
-<p style="color: white">
-this takes long to load my bad...
-</p>
+<h1>Home</h1>
+
+<button class="btn btn-primary" @onclick="GotoRank" >Go to Rank Page</button>
+<button class="btn btn-primary" @onclick="GotoMongo" >Go to Mongo Page</button>
+
+@code {
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    private void GotoMongo()
+    {
+        NavigationManager.NavigateTo("/mongo");
+    }
+    private void GotoRank()
+    {
+        NavigationManager.NavigateTo("/rank");
+    }
+}
