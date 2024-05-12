@@ -47,7 +47,7 @@ public class RankRequestHandler(HttpClient httpClient) : IRequestHandler<RankReq
 {
     public async Task<RankResponse> Handle(RankRequest request, CancellationToken cancellationToken = default)
     {
-        var players = new List<string>() {"cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house"};
+        var players = new List<string>() {"Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house"};
         var ranks = new List<Rank>();
 
         foreach (var player in players)
