@@ -1,5 +1,7 @@
 using FriendsTracker.Components.Pages;
 using FriendsTracker.Components;
+using MongoDB.Driver;
+using Microsoft.VisualBasic;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpContextAccessor();
@@ -10,7 +12,10 @@ builder.Services.AddHttpClient();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+var mongoKey = builder.Configuration["Apps:MongoDBPassword"];
+Program.mongoKey = mongoKey;
 var app = builder.Build();
+// app.MapGet("/key", () => mongoKey);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -30,3 +35,8 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+public partial class Program ()
+{
+    public static string? mongoKey { get; private set; }
+}
