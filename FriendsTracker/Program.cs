@@ -5,7 +5,7 @@ using Microsoft.VisualBasic;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<RankRequestHandler>());
+// builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<RankRequestHandler>());
 builder.Services.AddHttpClient();
 
 // Add services to the container.
