@@ -15,6 +15,9 @@ public partial class GetRankResponse
     [BsonElement ("data")]
     [JsonProperty("data")]
     public Rank Data { get; set; } = null!;
+
+    //trying without a setter to see
+    public DateTime Date { get; set;} = DateTime.Now;
 }
 
 public partial class Rank
