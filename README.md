@@ -189,7 +189,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@br3wt](https://twitter.com/br3wt) - codyprochaska26@gmail.com
+Cody Prochaska - [@br3wt](https://twitter.com/br3wt) - codyprochaska26@gmail.com
 
 Project Link: [https://github.com/codyp626/friends_valorant_tracker](https://github.com/codyp626/friends_valorant_tracker)
 
