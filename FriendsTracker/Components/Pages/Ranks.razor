@@ -17,7 +17,7 @@ else
                 <div class="player">
                     <p class="player_name">@player.Name</p>
                     <img class="rank_icon" src=@player.CurrentData.Images.Small.ToString()>
-                    <p class="rr_number">@player.GetRR(player.CurrentData.Elo) RR</p>
+                    <p class="rr_number">@player.CurrentData.RankingInTier RR</p>
                 </div>
             }
         </div>

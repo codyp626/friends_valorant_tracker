@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using System.Globalization;
+﻿using System.Globalization;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -45,22 +42,6 @@ public partial class Rank
     [BsonElement ("by_season")]
     [JsonProperty("by_season")]
     public BySeason BySeason { get; set; } = null!;
-
-    public int GetRR(long elo)
-    {
-        // less than immo 1
-        if(elo < 2100)
-        {
-             elo = elo % 100;
-        }
-
-        // immo1 or greater
-        else
-        {
-            elo = elo - 2100;
-        }
-        return (int) elo;
-    }
 }
 
 [BsonIgnoreExtraElements]
@@ -281,8 +262,6 @@ public partial class HighestRank
     public string Season { get; set; } = null!;
 }
 
-// public enum Currenttierpatched { Gold1, Gold2, Gold3, Platinum1, Silver1, Silver2, Silver3, Unrated };
-
 public partial class GetRankResponse
 {
     public static GetRankResponse? FromJson(string json) => JsonConvert.DeserializeObject<GetRankResponse>(json, Converter.Settings);
@@ -300,79 +279,7 @@ internal static class Converter
         MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
         DateParseHandling = DateParseHandling.None,
         Converters = {
-                //CurrenttierpatchedConverter.Singleton,
                 new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
             },
     };
 }
-
-// internal class CurrenttierpatchedConverter : JsonConverter
-// {
-//     public override bool CanConvert(Type t) => t == typeof(Currenttierpatched) || t == typeof(Currenttierpatched?);
-
-//     public override object ReadJson(JsonReader reader, Type t, object? existingValue, JsonSerializer serializer)
-//     {
-//         if (reader.TokenType == JsonToken.Null) return null!;
-//         var value = serializer.Deserialize<string>(reader);
-//         switch (value)
-//         {
-//             case "Gold 1":
-//                 return Currenttierpatched.Gold1;
-//             case "Gold 2":
-//                 return Currenttierpatched.Gold2;
-//             case "Gold 3":
-//                 return Currenttierpatched.Gold3;
-//             case "Platinum 1":
-//                 return Currenttierpatched.Platinum1;
-//             case "Silver 1":
-//                 return Currenttierpatched.Silver1;
-//             case "Silver 2":
-//                 return Currenttierpatched.Silver2;
-//             case "Silver 3":
-//                 return Currenttierpatched.Silver3;
-//             case "Unrated":
-//                 return Currenttierpatched.Unrated;
-//         }
-//         throw new Exception("Cannot unmarshal type Currenttierpatched");
-//     }
-
-//     public override void WriteJson(JsonWriter writer, object? untypedValue, JsonSerializer serializer)
-//     {
-//         if (untypedValue == null)
-//         {
-//             serializer.Serialize(writer, null);
-//             return;
-//         }
-//         var value = (Currenttierpatched)untypedValue;
-//         switch (value)
-//         {
-//             case Currenttierpatched.Gold1:
-//                 serializer.Serialize(writer, "Gold 1");
-//                 return;
-//             case Currenttierpatched.Gold2:
-//                 serializer.Serialize(writer, "Gold 2");
-//                 return;
-//             case Currenttierpatched.Gold3:
-//                 serializer.Serialize(writer, "Gold 3");
-//                 return;
-//             case Currenttierpatched.Platinum1:
-//                 serializer.Serialize(writer, "Platinum 1");
-//                 return;
-//             case Currenttierpatched.Silver1:
-//                 serializer.Serialize(writer, "Silver 1");
-//                 return;
-//             case Currenttierpatched.Silver2:
-//                 serializer.Serialize(writer, "Silver 2");
-//                 return;
-//             case Currenttierpatched.Silver3:
-//                 serializer.Serialize(writer, "Silver 3");
-//                 return;
-//             case Currenttierpatched.Unrated:
-//                 serializer.Serialize(writer, "Unrated");
-//                 return;
-//         }
-//         throw new Exception("Cannot marshal type Currenttierpatched");
-//     }
-
-//    public static readonly CurrenttierpatchedConverter Singleton = new CurrenttierpatchedConverter();
-//}
