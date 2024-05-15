@@ -68,109 +68,109 @@ public partial class BySeason
 {
     [BsonElement ("e1a1")]
     [JsonProperty("e1a1")]
-    public E1A1 E1A1 { get; set; } = null!;
+    public ACT_ERROR E1A1 { get; set; } = null!;
 
     [BsonElement ("e1a2")]
     [JsonProperty("e1a2")]
-    public E1A2 E1A2 { get; set; } = null!;
+    public ACT_STATS E1A2 { get; set; } = null!;
 
     [BsonElement ("e1a3")]
     [JsonProperty("e1a3")]
-    public E1A1 E1A3 { get; set; } = null!;
+    public ACT_ERROR E1A3 { get; set; } = null!;
 
     [BsonElement ("e2a1")]
     [JsonProperty("e2a1")]
-    public E1A2 E2A1 { get; set; } = null!;
+    public ACT_STATS E2A1 { get; set; } = null!;
 
     [BsonElement ("e2a2")]
     [JsonProperty("e2a2")]
-    public E1A1 E2A2 { get; set; } = null!;
+    public ACT_ERROR E2A2 { get; set; } = null!;
 
     [BsonElement ("e2a3")]
     [JsonProperty("e2a3")]
-    public E1A2 E2A3 { get; set; } = null!;
+    public ACT_STATS E2A3 { get; set; } = null!;
 
     [BsonElement ("e3a1")]
     [JsonProperty("e3a1")]
-    public E1A1 E3A1 { get; set; } = null!;
+    public ACT_ERROR E3A1 { get; set; } = null!;
 
     [BsonElement ("e3a2")]
     [JsonProperty("e3a2")]
-    public E1A2 E3A2 { get; set; } = null!;
+    public ACT_STATS E3A2 { get; set; } = null!;
 
     [BsonElement ("e3a3")]
     [JsonProperty("e3a3")]
-    public E1A2 E3A3 { get; set; } = null!;
+    public ACT_STATS E3A3 { get; set; } = null!;
 
     [BsonElement ("e4a1")]
     [JsonProperty("e4a1")]
-    public E1A2 E4A1 { get; set; } = null!;
+    public ACT_STATS E4A1 { get; set; } = null!;
 
     [BsonElement ("e4a2")]
     [JsonProperty("e4a2")]
-    public E1A2 E4A2 { get; set; } = null!;
+    public ACT_STATS E4A2 { get; set; } = null!;
 
     [BsonElement ("e4a3")]
     [JsonProperty("e4a3")]
-    public E1A2 E4A3 { get; set; } = null!;
+    public ACT_STATS E4A3 { get; set; } = null!;
 
     [BsonElement ("e5a1")]
     [JsonProperty("e5a1")]
-    public E1A2 E5A1 { get; set; } = null!;
+    public ACT_STATS E5A1 { get; set; } = null!;
 
     [BsonElement ("e5a2")]
     [JsonProperty("e5a2")]
-    public E1A1 E5A2 { get; set; } = null!;
+    public ACT_ERROR E5A2 { get; set; } = null!;
 
     [BsonElement ("e5a3")]
     [JsonProperty("e5a3")]
-    public E1A2 E5A3 { get; set; } = null!;
+    public ACT_STATS E5A3 { get; set; } = null!;
 
     [BsonElement ("e6a1")]
     [JsonProperty("e6a1")]
-    public E1A2 E6A1 { get; set; } = null!;
+    public ACT_STATS E6A1 { get; set; } = null!;
 
     [BsonElement ("e6a2")]
     [JsonProperty("e6a2")]
-    public E1A2 E6A2 { get; set; } = null!;
+    public ACT_STATS E6A2 { get; set; } = null!;
 
     [BsonElement ("e6a3")]
     [JsonProperty("e6a3")]
-    public E1A2 E6A3 { get; set; } = null!;
+    public ACT_STATS E6A3 { get; set; } = null!;
 
     [BsonElement ("e7a1")]
     [JsonProperty("e7a1")]
-    public E1A1 E7A1 { get; set; } = null!;
+    public ACT_ERROR E7A1 { get; set; } = null!;
 
     [BsonElement ("e7a2")]
     [JsonProperty("e7a2")]
-    public E1A1 E7A2 { get; set; } = null!;
+    public ACT_ERROR E7A2 { get; set; } = null!;
 
     [BsonElement ("e7a3")]
     [JsonProperty("e7a3")]
-    public E1A1 E7A3 { get; set; } = null!;
+    public ACT_ERROR E7A3 { get; set; } = null!;
 
     [BsonElement ("e8a1")]
     [JsonProperty("e8a1")]
-    public E1A1 E8A1 { get; set; } = null!;
+    public ACT_ERROR E8A1 { get; set; } = null!;
 
     [BsonElement ("e8a2")]
     [JsonProperty("e8a2")]
-    public E1A2 E8A2 { get; set; } = null!;
+    public ACT_STATS E8A2 { get; set; } = null!;
 
     [BsonElement ("e8a3")]
     [JsonProperty("e8a3")]
-    public E1A2 E8A3 { get; set; } = null!;
+    public ACT_STATS E8A3 { get; set; } = null!;
 }
 
-public partial class E1A1
+public partial class ACT_ERROR
 {
     [BsonElement ("error")]
     [JsonProperty("error")]
     public string Error { get; set; } = null!;
 }
 
-public partial class E1A2 //ACT STATS
+public partial class ACT_STATS //ACT STATS
 {
     [BsonElement ("wins")]
     [JsonProperty("wins")]
