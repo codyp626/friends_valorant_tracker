@@ -12,10 +12,11 @@ builder.Services.AddHttpClient();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-var mongoKey = builder.Configuration["Apps:MongoDBPassword"];
-Program.mongoKey = mongoKey;
+//mongo connection string key
+mongoKey = builder.Configuration["Apps:MongoDBPassword"];
+
 var app = builder.Build();
-// app.MapGet("/key", () => mongoKey);
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
