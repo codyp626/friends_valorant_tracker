@@ -1,28 +1,13 @@
-﻿// using System;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
-// using System;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Text.Json;
-// using MongoDB.Bson.IO;
 using FriendsTracker.Components.Infrastructure;
 using MongoDB.Bson.Serialization;
-// using MongoDB.Bson.Serialization.Serializers;
 
 namespace FriendsTracker.Components.Pages;
 
 
 public partial class Mongo
 {
-    // private readonly string _connectionString;
-    public List<string> ResultList { get; private set; }
-
-    // public Mongo()
-    // {
-    //     _connectionString = "your_default_connection_string_here";
-    // }
-
     public IMongoDatabase GetDatabase(string databaseName, string connectionString)
     {
         var client = new MongoClient(connectionString);
@@ -31,40 +16,18 @@ public partial class Mongo
 
     public void ListAllData<T>(string databaseName, string collectionName, string connectionString)
     {
-        // BsonClassMap.RegisterClassMap<GetRankResponse>(classMap =>
-        // {
-        //     classMap.AutoMap();
-        // //     classMap.MapMember(p => p.Id);
-        //     // classMap.MapMember(p => p.Status);
-        //     // classMap.MapMember(p => p.Data);
-        // });
 
         var database = GetDatabase(databaseName, connectionString);
         var collection = database.GetCollection<BsonDocument>(collectionName);
         var filter = Builders<BsonDocument>.Filter.Empty; // Empty filter to match all documents
         try
         {
-            // ResultList = collection.Find(filter).ToEnumerable().Select(d => d.ToJson(new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson })).ToList();
-            // var string_results = collection.Find(filter).ToEnumerable();
             var queryableCollection = collection.AsQueryable().First();
 
             Console.WriteLine("DOCUMENT count:" + collection.CountDocuments(filter));
-            // Console.WriteLine("DOCUMENT json:" + queryableCollection.ToJson());
             var rank = BsonSerializer.Deserialize<GetRankResponse>(queryableCollection);
             Console.WriteLine("RANK OBJECT:" + rank.ToJson());
             Console.WriteLine("RANK OBJECT:" + rank.Data.Name + rank.Data.CurrentData.Currenttierpatched);
-
-            // Console.WriteLine("RANKS:" + queryableCollection.ToJson());
-            // Console.WriteLine("DOCUMENT string:" + queryableCollection.ToString());
-
-            // Console.WriteLine(queryableCollection.ToJson());
-            // foreach (var doc in queryableCollection)
-            // {
-            //     Console.WriteLine(doc.ToJson());
-            // }
-
-            // var documents = collection.Find(filter);
-
         }
         catch (Exception ex)
         {
@@ -78,11 +41,6 @@ public partial class Mongo
     {
         var connectionString = $"mongodb+srv://brewt:{Program.mongoKey}@cluster0.xpbkg6w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
         ListAllData<string>("player_data_db", "rank", connectionString);
-        // foreach (var doc in ResultList)
-        // {
-        //     // realResult+= doc;
-        //     // Process each document here
-        // }
 
     }
 }

@@ -1,5 +1,4 @@
 using MediatR;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Components;
 using FriendsTracker.Components.Infrastructure;
 
