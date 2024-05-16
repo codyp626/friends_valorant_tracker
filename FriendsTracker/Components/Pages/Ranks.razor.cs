@@ -57,12 +57,6 @@ public partial class Ranks
         return list;
     }
 
-    // public void ButtonFunction()
-    // {
-    //     // rankList = await getPlayerRank();
-    // }
-
-
     public async Task updateMongoRanks()
     {
         var database = GetDatabase("player_data_db");
@@ -75,7 +69,6 @@ public partial class Ranks
             var result = await collection.UpdateOneAsync(filter, update);
             Console.WriteLine(result.ToString());
         }
-        // ButtonFunction(); //update data to the viewer
     }
 
 
