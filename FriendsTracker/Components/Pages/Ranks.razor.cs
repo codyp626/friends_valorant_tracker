@@ -46,7 +46,6 @@ public partial class Ranks
             {
                 GetRankResponse rank = BsonSerializer.Deserialize<GetRankResponse>(bson_rank);
                 list.Add(rank);
-                // rankList.Add(rank);
             }
         }
         catch (Exception ex)
