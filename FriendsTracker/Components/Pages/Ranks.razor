@@ -1,33 +1,43 @@
 ﻿@page "/rank"
 @using FriendsTracker.Components.Pages;
 
-@if (_isLoading)
+@* @if (_isLoading)
 {
     <p>
         Loading...
     </p>
 }
 else
-{
+{ *@
+    <button class="btn btn-primary" @onclick="@updateMongoRanks">Update Player Data</button>
+    @* @foreach (var player in _response.Ranks)
+    {
+        <div class="player">
+            <p class="player_name">@player.Name</p>
+            <img class="rank_icon" src=@player.CurrentData.Images.Small.ToString()>
+            <p class="rr_number">@player.CurrentData.RankingInTier RR</p>
+        </div>
+    } *@
+    @* <p>@realResult</p> *@
     <div class="card_container">
         <div class="card">
-            Rank
-            @foreach (var player in _response.Ranks)
+        Ranks
+            @foreach (var player in rankList)
             {
                 <div class="player">
-                    <p class="player_name">@player.Name</p>
-                    <img class="rank_icon" src=@player.CurrentData.Images.Small.ToString()>
-                    <p class="rr_number">@player.CurrentData.RankingInTier RR</p>
+                    <p class="player_name">@player.Data.Name</p>
+                    <img class="rank_icon" src=@player.Data.CurrentData.Images.Small.ToString()>
+                    <p class="rr_number">@player.Data.CurrentData.RankingInTier RR</p>
                 </div>
             }
         </div>
 
         <div class="card">
-            Mongo Rank
+            Card 2
         </div>
 
         <div class="card">
             Card 3
         </div>
     </div>
-}
+@* } *@

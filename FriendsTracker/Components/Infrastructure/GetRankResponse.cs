@@ -17,7 +17,7 @@ public partial class GetRankResponse
     public Rank Data { get; set; } = null!;
 
     //trying without a setter to see
-    public DateTime Date { get; set;} = DateTime.Now;
+    // public DateTime Date { get; set;} = DateTime.MinValue;
 }
 
 public partial class Rank
@@ -52,7 +52,7 @@ public partial class BySeason
 {
     [BsonElement ("e1a1")]
     [JsonProperty("e1a1")]
-    public ACT_ERROR E1A1 { get; set; } = null!;
+    public ACT_STATS E1A1 { get; set; } = null!;
 
     [BsonElement ("e1a2")]
     [JsonProperty("e1a2")]
@@ -60,7 +60,7 @@ public partial class BySeason
 
     [BsonElement ("e1a3")]
     [JsonProperty("e1a3")]
-    public ACT_ERROR E1A3 { get; set; } = null!;
+    public ACT_STATS E1A3 { get; set; } = null!;
 
     [BsonElement ("e2a1")]
     [JsonProperty("e2a1")]
@@ -68,7 +68,7 @@ public partial class BySeason
 
     [BsonElement ("e2a2")]
     [JsonProperty("e2a2")]
-    public ACT_ERROR E2A2 { get; set; } = null!;
+    public ACT_STATS E2A2 { get; set; } = null!;
 
     [BsonElement ("e2a3")]
     [JsonProperty("e2a3")]
@@ -76,7 +76,7 @@ public partial class BySeason
 
     [BsonElement ("e3a1")]
     [JsonProperty("e3a1")]
-    public ACT_ERROR E3A1 { get; set; } = null!;
+    public ACT_STATS E3A1 { get; set; } = null!;
 
     [BsonElement ("e3a2")]
     [JsonProperty("e3a2")]
@@ -104,7 +104,7 @@ public partial class BySeason
 
     [BsonElement ("e5a2")]
     [JsonProperty("e5a2")]
-    public ACT_ERROR E5A2 { get; set; } = null!;
+    public ACT_STATS E5A2 { get; set; } = null!;
 
     [BsonElement ("e5a3")]
     [JsonProperty("e5a3")]
@@ -124,19 +124,19 @@ public partial class BySeason
 
     [BsonElement ("e7a1")]
     [JsonProperty("e7a1")]
-    public ACT_ERROR E7A1 { get; set; } = null!;
+    public ACT_STATS E7A1 { get; set; } = null!;
 
     [BsonElement ("e7a2")]
     [JsonProperty("e7a2")]
-    public ACT_ERROR E7A2 { get; set; } = null!;
+    public ACT_STATS E7A2 { get; set; } = null!;
 
     [BsonElement ("e7a3")]
     [JsonProperty("e7a3")]
-    public ACT_ERROR E7A3 { get; set; } = null!;
+    public ACT_STATS E7A3 { get; set; } = null!;
 
     [BsonElement ("e8a1")]
     [JsonProperty("e8a1")]
-    public ACT_ERROR E8A1 { get; set; } = null!;
+    public ACT_STATS E8A1 { get; set; } = null!;
 
     [BsonElement ("e8a2")]
     [JsonProperty("e8a2")]
@@ -147,7 +147,7 @@ public partial class BySeason
     public ACT_STATS E8A3 { get; set; } = null!;
 }
 
-public partial class ACT_ERROR
+public partial class ACT_STATS
 {
     [BsonElement ("error")]
     [JsonProperty("error")]

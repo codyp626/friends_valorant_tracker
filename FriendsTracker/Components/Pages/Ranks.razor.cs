@@ -1,69 +1,113 @@
 using MediatR;
 using Microsoft.AspNetCore.Components;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using MongoDB.Bson.Serialization;
 using FriendsTracker.Components.Infrastructure;
+using DnsClient.Protocol;
+using ZstdSharp.Unsafe;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json;
 
 namespace FriendsTracker.Components.Pages;
 
-public partial class Ranks : IDisposable
+public partial class Ranks
 {
-    [Inject] private IMediator Mediator { get; set; } = null!;
-
-    private readonly CancellationTokenSource _cts = new();
-    private readonly RankRequest _request = new();
-    private RankResponse _response = new();
-    private bool _isLoading;
-
     protected override async Task OnInitializedAsync()
     {
-        _isLoading = true;
+        rankList = await getMongoRanks("player_data_db", "rank");
+        rankList = rankList.OrderByDescending(r => r.Data.CurrentData.Elo).ToList();
+    }
+
+    public List<GetRankResponse> rankList = new();
+    private bool _isLoading;
+
+
+    public IMongoDatabase GetDatabase(string databaseName)
+    {
+        var connectionString = $"mongodb+srv://brewt:{Program.mongoKey}@cluster0.xpbkg6w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+        var client = new MongoClient(connectionString);
+        return client.GetDatabase(databaseName);
+    }
+
+    public async Task<List<GetRankResponse>> getMongoRanks(string databaseName, string collectionName)
+    {
+        var list = new List<GetRankResponse>();
+        var collection = GetDatabase(databaseName).GetCollection<BsonDocument>(collectionName);
+        var filter = Builders<BsonDocument>.Filter.Empty; // Empty filter to match all documents
         try
         {
-            _response = await Mediator.Send(_request, _cts.Token);
+            var queryableCollection = await collection.AsQueryable().ToListAsync();
+
+            //doc count for testing
+            Console.WriteLine("DOCUMENT count:" + collection.CountDocuments(filter));
+            foreach (BsonDocument bson_rank in queryableCollection)
+            {
+                GetRankResponse rank = BsonSerializer.Deserialize<GetRankResponse>(bson_rank);
+                list.Add(rank);
+            }
         }
         catch (Exception ex)
         {
-            // Handle any errors here, e.g., logging or displaying an error message
-            Console.WriteLine($"Error fetching data: {ex.Message}");
+            Console.WriteLine($"Error while listing data from collection {collectionName}: {ex.Message}");
         }
-        finally
-        {
-            _isLoading = false;
-        }
+
+        Console.WriteLine("list count: " + list.Count);
+        return list;
     }
 
-    public void Dispose()
+    public async Task updateMongoRanks()
     {
-        _cts.Cancel();
-        _cts.Dispose();
+        var database = GetDatabase("player_data_db");
+        var collection = database.GetCollection<GetRankResponse>("rank");
+        var updatedRanks = await getPlayerRanksHTTP();
+        foreach(GetRankResponse player in updatedRanks)
+        {
+            var filter = Builders<GetRankResponse>.Filter.Eq(r => r.Data.Name, player.Data.Name);
+            var update = Builders<GetRankResponse>.Update.Set(r => r.Data, player.Data);
+            var result = await collection.UpdateOneAsync(filter, update);
+            Console.WriteLine(result.ToString());
+        }
     }
-}
 
-public class RankRequest : IRequest<RankResponse>
-{
-}
 
-public class RankRequestHandler(HttpClient httpClient) : IRequestHandler<RankRequest, RankResponse>
-{
-    public async Task<RankResponse> Handle(RankRequest request, CancellationToken cancellationToken = default)
+
+    public async Task<List<GetRankResponse>> getPlayerRanksHTTP()
     {
         var players = new List<string>() {"Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house"};
-        var ranks = new List<Rank>();
+        // var players = new List<string>() { "BootyConsumer/376", "Brewt/0000" };
+        var ranks = new List<GetRankResponse>();
+
+        static async Task<GetRankResponse?> ProcessRepositoriesAsync(HttpClient client, string player)
+        {
+            var json = await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v2/mmr/na/{player}");
+            GetRankResponse? rank = GetRankResponse.FromJson(json);
+            if (rank is null)
+            {
+                Console.WriteLine("API ERROR");
+                return null;
+            }
+            else
+            {
+                return rank;
+            }
+        }
 
         foreach (var player in players)
         {
-            var json_string = await httpClient.GetStringAsync($"https://api.henrikdev.xyz/valorant/v2/mmr/na/{player}");
-            var rank = GetRankResponse.FromJson(json_string)!.Data;
-            ranks.Add(rank);
+            Console.WriteLine($"starting on {player}");
+            using HttpClient client = new();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("Authentication", Program.henrik_API_Key);
+            var rank = await ProcessRepositoriesAsync(client, player);
+            if (rank is not null)
+            {
+                ranks.Add(rank);
+            }
         }
-        ranks = ranks.OrderByDescending(r => r.CurrentData.Elo).ToList();
 
-        return new RankResponse { Ranks = ranks };
+        return ranks;
     }
 }
-
-public class RankResponse
-{
-    public IEnumerable<Rank> Ranks { get; set; } = [];
-
-}
-
