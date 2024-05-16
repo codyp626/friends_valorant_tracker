@@ -14,6 +14,7 @@ builder.Services.AddRazorComponents()
 
 //mongo connection string key
 mongoKey = builder.Configuration["Apps:MongoDBPassword"];
+henrik_API_Key = builder.Configuration["Apps:HenrikAPI"];
 
 var app = builder.Build();
 
@@ -40,4 +41,5 @@ app.Run();
 public partial class Program ()
 {
     public static string? mongoKey { get; private set; }
+    public static string? henrik_API_Key { get; private set; }
 }

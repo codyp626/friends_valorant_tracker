@@ -17,7 +17,7 @@ public partial class GetRankResponse
     public Rank Data { get; set; } = null!;
 
     //trying without a setter to see
-    public DateTime Date { get; set;} = DateTime.Now;
+    // public DateTime Date { get; set;} = DateTime.MinValue;
 }
 
 public partial class Rank
