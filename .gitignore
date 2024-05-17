@@ -253,6 +253,7 @@ ClientBin/
 node_modules/
 bower_components/
 orleans.codegen.cs
+secrets.txt
 
 # RIA/Silverlight projects
 Generated_Code/
