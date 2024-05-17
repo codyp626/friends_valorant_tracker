@@ -13,14 +13,14 @@ public partial class Ranks : IDisposable
 
     public DateTime lastUpdated = DateTime.MinValue;
     private string timeSinceLastUpdated = "";
-    private System.Timers.Timer timer = null;
+    private System.Timers.Timer timer = null!;
 
     protected override async Task OnInitializedAsync()
     {
-        rankList = await getMongoRanks("player_data_db", "rank");
+        rankList = await getMongoRanksAsync("player_data_db", "rank");
         rankList = rankList.OrderByDescending(r => r.Data.CurrentData.Elo).ToList();
         _isLoading = false;
-        await GetTime("rank");
+        await GetTimeAsync("rank");
         
         //Timer stuff
         UpdateTimeSinceLastUpdated();
@@ -41,20 +41,20 @@ public partial class Ranks : IDisposable
         string plural = "";
         if (timeSpan.TotalDays >= 1)
         {
-            if (timeSpan.TotalDays > 1)
+            if (timeSpan.TotalDays >= 2)
                 plural = "s";
             return $"{(int)timeSpan.TotalDays} day{plural} ago";
         }
         if (timeSpan.TotalHours >= 1)
         {
-            if (timeSpan.TotalHours > 1)
+            if (timeSpan.TotalHours >= 2)
                 plural = "s";
             return $"{(int)timeSpan.TotalHours} hour{plural} ago";
         }
 
         if (timeSpan.TotalMinutes >= 1)
         {
-            if (timeSpan.TotalMinutes > 1)
+            if (timeSpan.TotalMinutes >= 2)
                 plural = "s";
             return $"{(int)timeSpan.TotalMinutes} minute{plural} ago";
         }
@@ -73,7 +73,7 @@ public partial class Ranks : IDisposable
         return client.GetDatabase(databaseName);
     }
 
-    public async Task<List<GetRankResponse>> getMongoRanks(string databaseName, string collectionName)
+    public async Task<List<GetRankResponse>> getMongoRanksAsync(string databaseName, string collectionName)
     {
         var list = new List<GetRankResponse>();
         var collection = GetDatabase(databaseName).GetCollection<BsonDocument>(collectionName);
@@ -94,7 +94,7 @@ public partial class Ranks : IDisposable
         return list;
     }
 
-    public async Task GetTime(string dataType)
+    public async Task GetTimeAsync(string dataType)
     {
         var database = GetDatabase("player_data_db");
         var collection = database.GetCollection<CustomDate>("time_updated");
@@ -103,7 +103,7 @@ public partial class Ranks : IDisposable
         lastUpdated = DateTime.FromBinary(time.dateBinary);
     }
 
-    public async Task updateTime(IMongoDatabase database)
+    public async Task updateTimeAsync(IMongoDatabase database)
     {
         Console.WriteLine("starting updateTime");
         
@@ -117,13 +117,13 @@ public partial class Ranks : IDisposable
         await collection.UpdateOneAsync(filter, update);
     }
 
-    public async Task updateMongoRanks()
+    public async Task updateMongoRanksAsync()
     {
         _isLoading = true;
         var database = GetDatabase("player_data_db");
-        await updateTime(database);
+        await updateTimeAsync(database);
         var collection = database.GetCollection<GetRankResponse>("rank");
-        var updatedRanks = await getPlayerRanksHTTP();
+        var updatedRanks = await getPlayerRanksHTTPAsync();
         foreach(GetRankResponse player in updatedRanks)
         {
             //this filter should be puuid in the future
@@ -134,7 +134,7 @@ public partial class Ranks : IDisposable
         await OnInitializedAsync();
     }
 
-    public async Task<List<GetRankResponse>> getPlayerRanksHTTP()
+    public async Task<List<GetRankResponse>> getPlayerRanksHTTPAsync()
     {
         var players = new List<string>() {"Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house"};
         var ranks = new List<GetRankResponse>();
