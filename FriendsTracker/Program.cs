@@ -14,14 +14,21 @@ builder.Services.AddRazorComponents()
 
 //mongo connection string key
 // mongoKey = builder.Configuration["Apps:MongoDBPassword"];
+try
+{
 string[] lines = File.ReadAllLines("../../secrets.txt");
+mongoKey = lines[0];
+henrik_API_Key = lines[1];
+}
+catch
+{
+Console.WriteLine("secrets.txt not found, okay while testing");
+}
 
 mongoKey = builder.Configuration["Apps:MongoDBPassword"];
-mongoKey = lines[0];
 
 
 henrik_API_Key = builder.Configuration["Apps:HenrikAPI"];
-henrik_API_Key = lines[1];
 
 var app = builder.Build();
 

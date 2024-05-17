@@ -6,17 +6,51 @@ using System.Net.Http.Headers;
 
 namespace FriendsTracker.Components.Pages;
 
-public partial class Ranks
+public partial class Ranks : IDisposable
 {
+    private bool _isLoading = true;
+    public List<GetRankResponse> rankList = new();
+
+    public DateTime lastUpdated = DateTime.MinValue;
+    private string timeSinceLastUpdated = "";
+    private System.Timers.Timer timer = null;
+
     protected override async Task OnInitializedAsync()
     {
         rankList = await getMongoRanks("player_data_db", "rank");
         rankList = rankList.OrderByDescending(r => r.Data.CurrentData.Elo).ToList();
+        _isLoading = false;
+        await GetTime("rank");
+
+        //Timer stuff
+        UpdateTimeSinceLastUpdated();
+        timer = new System.Timers.Timer(1000); // 1 second interval
+        timer.Elapsed += (sender, e) => InvokeAsync(UpdateTimeSinceLastUpdated);
+        timer.Start();
     }
 
-    public List<GetRankResponse> rankList = new();
-    private bool _isLoading;
+    private void UpdateTimeSinceLastUpdated()
+    {
+        var timeSpan = DateTime.Now - lastUpdated;
+        timeSinceLastUpdated = FormatTimeSpan(timeSpan);
+        StateHasChanged(); // Notify the component to re-render
+    }
 
+    private string FormatTimeSpan(TimeSpan timeSpan)
+    {
+        if (timeSpan.TotalDays >= 1)
+            return $"{(int)timeSpan.TotalDays} days ago";
+        if (timeSpan.TotalHours >= 1)
+            return $"{(int)timeSpan.TotalHours} hours ago";
+        if (timeSpan.TotalMinutes >= 1)
+            return $"{(int)timeSpan.TotalMinutes} minutes ago";
+        return $"{(int)timeSpan.TotalSeconds} seconds ago";
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
+    }
 
     public IMongoDatabase GetDatabase(string databaseName)
     {
@@ -33,9 +67,6 @@ public partial class Ranks
         try
         {
             var queryableCollection = await collection.AsQueryable().ToListAsync();
-
-            //doc count for testing
-            Console.WriteLine("DOCUMENT count:" + collection.CountDocuments(filter));
             foreach (BsonDocument bson_rank in queryableCollection)
             {
                 GetRankResponse rank = BsonSerializer.Deserialize<GetRankResponse>(bson_rank);
@@ -46,31 +77,52 @@ public partial class Ranks
         {
             Console.WriteLine($"Error while listing data from collection {collectionName}: {ex.Message}");
         }
-
-        Console.WriteLine("list count: " + list.Count);
         return list;
+    }
+
+    public async Task GetTime(string dataType)
+    {
+        var database = GetDatabase("player_data_db");
+        var collection = database.GetCollection<CustomDate>("time_updated");
+        var filter = Builders<CustomDate>.Filter.Eq(r => r.dataType, dataType); //match rank date type
+        var time = await collection.AsQueryable().FirstAsync();
+        lastUpdated = DateTime.FromBinary(time.dateBinary);
+    }
+
+    public async Task updateTime(IMongoDatabase database)
+    {
+        Console.WriteLine("starting updateTime");
+
+        var collection = database.GetCollection<CustomDate>("time_updated");
+        var currentTime = DateTime.Now;
+
+        var filter = Builders<CustomDate>.Filter.Eq(r => r.dataType, "rank"); //match rank date type
+        var update = Builders<CustomDate>.Update.Set(r => r.dateBinary, currentTime.ToBinary());
+        await collection.UpdateOneAsync(filter, update);
+        update = Builders<CustomDate>.Update.Set(r => r.dateString, currentTime.ToString());
+        await collection.UpdateOneAsync(filter, update);
     }
 
     public async Task updateMongoRanks()
     {
+        _isLoading = true;
         var database = GetDatabase("player_data_db");
+        await updateTime(database);
         var collection = database.GetCollection<GetRankResponse>("rank");
         var updatedRanks = await getPlayerRanksHTTP();
-        foreach(GetRankResponse player in updatedRanks)
+        foreach (GetRankResponse player in updatedRanks)
         {
             //this filter should be puuid in the future
             var filter = Builders<GetRankResponse>.Filter.Eq(r => r.Data.Name, player.Data.Name);
             var update = Builders<GetRankResponse>.Update.Set(r => r.Data, player.Data);
             var result = await collection.UpdateOneAsync(filter, update);
-            Console.WriteLine(result.ToString());
         }
+        await OnInitializedAsync();
     }
-
-
 
     public async Task<List<GetRankResponse>> getPlayerRanksHTTP()
     {
-        var players = new List<string>() {"Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house"};
+        var players = new List<string>() { "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house" };
         var ranks = new List<GetRankResponse>();
 
         static async Task<GetRankResponse?> ProcessRepositoriesAsync(HttpClient client, string player)
@@ -90,14 +142,15 @@ public partial class Ranks
 
         foreach (var player in players)
         {
-            Console.WriteLine($"starting on {player}");
+            Console.Write($"getting {player}'s rank ...");
             using HttpClient client = new();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("Authentication", Program.henrik_API_Key);
+            client.DefaultRequestHeaders.Add("Authorization", Program.henrik_API_Key);
             var rank = await ProcessRepositoriesAsync(client, player);
             if (rank is not null)
             {
+                Console.WriteLine(" DONE");
                 ranks.Add(rank);
             }
         }
