@@ -14,4 +14,14 @@
     <PackageReference Include="System.Text.Json" Version="8.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\favicon\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\FriendsTracker.styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

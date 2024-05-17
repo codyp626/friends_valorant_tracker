@@ -21,7 +21,7 @@ public partial class Ranks : IDisposable
         rankList = rankList.OrderByDescending(r => r.Data.CurrentData.Elo).ToList();
         _isLoading = false;
         await GetTime("rank");
-
+        
         //Timer stuff
         UpdateTimeSinceLastUpdated();
         timer = new System.Timers.Timer(1000); // 1 second interval
@@ -35,15 +35,29 @@ public partial class Ranks : IDisposable
         timeSinceLastUpdated = FormatTimeSpan(timeSpan);
         StateHasChanged(); // Notify the component to re-render
     }
-
+    
     private string FormatTimeSpan(TimeSpan timeSpan)
     {
+        string plural = "";
         if (timeSpan.TotalDays >= 1)
-            return $"{(int)timeSpan.TotalDays} days ago";
+        {
+            if (timeSpan.TotalDays > 1)
+                plural = "s";
+            return $"{(int)timeSpan.TotalDays} day{plural} ago";
+        }
         if (timeSpan.TotalHours >= 1)
-            return $"{(int)timeSpan.TotalHours} hours ago";
+        {
+            if (timeSpan.TotalHours > 1)
+                plural = "s";
+            return $"{(int)timeSpan.TotalHours} hour{plural} ago";
+        }
+
         if (timeSpan.TotalMinutes >= 1)
-            return $"{(int)timeSpan.TotalMinutes} minutes ago";
+        {
+            if (timeSpan.TotalMinutes > 1)
+                plural = "s";
+            return $"{(int)timeSpan.TotalMinutes} minute{plural} ago";
+        }
         return $"{(int)timeSpan.TotalSeconds} seconds ago";
     }
 
@@ -92,10 +106,10 @@ public partial class Ranks : IDisposable
     public async Task updateTime(IMongoDatabase database)
     {
         Console.WriteLine("starting updateTime");
-
+        
         var collection = database.GetCollection<CustomDate>("time_updated");
         var currentTime = DateTime.Now;
-
+        
         var filter = Builders<CustomDate>.Filter.Eq(r => r.dataType, "rank"); //match rank date type
         var update = Builders<CustomDate>.Update.Set(r => r.dateBinary, currentTime.ToBinary());
         await collection.UpdateOneAsync(filter, update);
@@ -110,7 +124,7 @@ public partial class Ranks : IDisposable
         await updateTime(database);
         var collection = database.GetCollection<GetRankResponse>("rank");
         var updatedRanks = await getPlayerRanksHTTP();
-        foreach (GetRankResponse player in updatedRanks)
+        foreach(GetRankResponse player in updatedRanks)
         {
             //this filter should be puuid in the future
             var filter = Builders<GetRankResponse>.Filter.Eq(r => r.Data.Name, player.Data.Name);
@@ -122,7 +136,7 @@ public partial class Ranks : IDisposable
 
     public async Task<List<GetRankResponse>> getPlayerRanksHTTP()
     {
-        var players = new List<string>() { "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house" };
+        var players = new List<string>() {"Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house"};
         var ranks = new List<GetRankResponse>();
 
         static async Task<GetRankResponse?> ProcessRepositoriesAsync(HttpClient client, string player)

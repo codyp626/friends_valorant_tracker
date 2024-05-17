@@ -22,16 +22,12 @@ henrik_API_Key = lines[1];
 }
 catch
 {
+mongoKey = builder.Configuration["Apps:MongoDBPassword"];
+henrik_API_Key = builder.Configuration["Apps:HenrikAPI"];
 Console.WriteLine("secrets.txt not found, okay while testing");
 }
 
-mongoKey = builder.Configuration["Apps:MongoDBPassword"];
-
-
-henrik_API_Key = builder.Configuration["Apps:HenrikAPI"];
-
 var app = builder.Build();
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
