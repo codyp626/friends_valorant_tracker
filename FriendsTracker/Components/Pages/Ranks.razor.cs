@@ -136,7 +136,7 @@ public partial class Ranks : IDisposable
 
     public async Task<List<GetRankResponse>> getPlayerRanksHTTPAsync()
     {
-        var players = new List<string>() {"Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house"};
+        var players = new List<string>() {"ads/555", "VGB/444", "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house"};
         var ranks = new List<GetRankResponse>();
 
         static async Task<GetRankResponse?> ProcessRepositoriesAsync(HttpClient client, string player)

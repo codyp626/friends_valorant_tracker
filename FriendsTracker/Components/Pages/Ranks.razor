@@ -32,10 +32,36 @@
         }
 
     </div>
-    @* <div class="card">
-        Card 2
-    </div>
     <div class="card">
+        Iron to Immortal
+        @if (_isLoading)
+        {
+            <div class="ring-container">
+            <div class="lds-ring">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            </div>
+        }
+        else
+        {
+            @foreach (var player in rankList)
+            {
+                @if (player.Data.Name == "ads" || player.Data.Name == "VGB")
+                {
+                <div class="player">
+                    <p class="player_name">@player.Data.Name</p>
+                    <img class="rank_icon" src=@player.Data.CurrentData.Images.Small.ToString()>
+                    <p class="rr_number">@player.Data.CurrentData.RankingInTier RR</p>
+                </div>
+                }
+            }
+        }
+
+    </div>
+    @* <div class="card">
         Card 3
     </div> *@
 </div>
