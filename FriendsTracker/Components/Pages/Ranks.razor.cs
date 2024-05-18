@@ -97,12 +97,10 @@ public partial class Ranks : IDisposable
                 if (playersNoah.Contains(rank.Data.Name))
                 {
                     rankListNoah.Add(rank);
-                    Console.WriteLine("found noah people");
                 }
                 else
                 {
                     rankList.Add(rank);
-                    Console.WriteLine("found my people");
                 }
             }
         }
@@ -123,8 +121,6 @@ public partial class Ranks : IDisposable
 
     public async Task updateTimeAsync(IMongoDatabase database)
     {
-        Console.WriteLine("starting updateTime");
-
         var collection = database.GetCollection<CustomDate>("time_updated");
         var currentTime = DateTime.Now;
 
@@ -154,7 +150,7 @@ public partial class Ranks : IDisposable
 
     public async Task<List<GetRankResponse>> getPlayerRanksHTTPAsync()
     {
-        var players = new List<string>() { "shua/9731", "Spit%20Slurpin/2222", "Pepp/fishi", "ZeroTwo/2809", "ads/555", "VGB/444", "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house" };
+        var players = new List<string>() { "shua/9731", "spit%20slurpin/2222", "Pepp/fishi", "ZeroTwo/2809", "ads/555", "VGB/444", "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house" };
         // var playersNoah = new List<string>() { "Shua/9731", "Spit%20Slurpin/2222", "Pepp/fishi", "ZeroTwo/2809" };
         var ranks = new List<GetRankResponse>();
 
@@ -176,7 +172,7 @@ public partial class Ranks : IDisposable
 
         foreach (var player in players)
         {
-            Console.Write($"getting {player}'s rank ...");
+            Console.Write($"got {player}'s rank ... ");
             using HttpClient client = new();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -184,7 +180,7 @@ public partial class Ranks : IDisposable
             var rank = await ProcessRepositoriesAsync(client, player);
             if (rank is not null)
             {
-                Console.WriteLine(" DONE");
+                Console.WriteLine(rank.Data.CurrentData.Currenttierpatched);
                 ranks.Add(rank);
             }
         }
