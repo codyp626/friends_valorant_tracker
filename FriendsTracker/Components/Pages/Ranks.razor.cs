@@ -3,6 +3,8 @@ using MongoDB.Driver;
 using MongoDB.Bson.Serialization;
 using FriendsTracker.Components.Infrastructure;
 using System.Net.Http.Headers;
+using System.Text.Encodings.Web;
+using System.Web;
 
 namespace FriendsTracker.Components.Pages;
 
@@ -10,18 +12,23 @@ public partial class Ranks : IDisposable
 {
     private bool _isLoading = true;
     public List<GetRankResponse> rankList = new();
+    public List<GetRankResponse> rankListNoah = new();
 
     public DateTime lastUpdated = DateTime.MinValue;
     private string timeSinceLastUpdated = "";
     private System.Timers.Timer timer = null!;
+    private string suffix = "";
 
     protected override async Task OnInitializedAsync()
     {
-        rankList = await getMongoRanksAsync("player_data_db", "rank");
+        await getMongoRanksAsync("player_data_db", "rank");
+
         rankList = rankList.OrderByDescending(r => r.Data.CurrentData.Elo).ToList();
+        rankListNoah = rankListNoah.OrderByDescending(r => r.Data.CurrentData.Elo).ToList();
+
         _isLoading = false;
         await GetTimeAsync("rank");
-        
+
         //Timer stuff
         UpdateTimeSinceLastUpdated();
         timer = new System.Timers.Timer(1000); // 1 second interval
@@ -35,7 +42,7 @@ public partial class Ranks : IDisposable
         timeSinceLastUpdated = FormatTimeSpan(timeSpan);
         StateHasChanged(); // Notify the component to re-render
     }
-    
+
     private string FormatTimeSpan(TimeSpan timeSpan)
     {
         string plural = "";
@@ -73,9 +80,12 @@ public partial class Ranks : IDisposable
         return client.GetDatabase(databaseName);
     }
 
-    public async Task<List<GetRankResponse>> getMongoRanksAsync(string databaseName, string collectionName)
+    public async Task getMongoRanksAsync(string databaseName, string collectionName)
     {
-        var list = new List<GetRankResponse>();
+        rankList = new();
+        rankListNoah = new();
+        var playersNoah = new List<string>() { "shua", "spit slurpin", "Pepp", "ZeroTwo" };
+        // var list = new List<GetRankResponse>();
         var collection = GetDatabase(databaseName).GetCollection<BsonDocument>(collectionName);
         var filter = Builders<BsonDocument>.Filter.Empty; // Empty filter to match all documents
         try
@@ -84,14 +94,22 @@ public partial class Ranks : IDisposable
             foreach (BsonDocument bson_rank in queryableCollection)
             {
                 GetRankResponse rank = BsonSerializer.Deserialize<GetRankResponse>(bson_rank);
-                list.Add(rank);
+                if (playersNoah.Contains(rank.Data.Name))
+                {
+                    rankListNoah.Add(rank);
+                    Console.WriteLine("found noah people");
+                }
+                else
+                {
+                    rankList.Add(rank);
+                    Console.WriteLine("found my people");
+                }
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error while listing data from collection {collectionName}: {ex.Message}");
         }
-        return list;
     }
 
     public async Task GetTimeAsync(string dataType)
@@ -106,10 +124,10 @@ public partial class Ranks : IDisposable
     public async Task updateTimeAsync(IMongoDatabase database)
     {
         Console.WriteLine("starting updateTime");
-        
+
         var collection = database.GetCollection<CustomDate>("time_updated");
         var currentTime = DateTime.Now;
-        
+
         var filter = Builders<CustomDate>.Filter.Eq(r => r.dataType, "rank"); //match rank date type
         var update = Builders<CustomDate>.Update.Set(r => r.dateBinary, currentTime.ToBinary());
         await collection.UpdateOneAsync(filter, update);
@@ -124,7 +142,7 @@ public partial class Ranks : IDisposable
         await updateTimeAsync(database);
         var collection = database.GetCollection<GetRankResponse>("rank");
         var updatedRanks = await getPlayerRanksHTTPAsync();
-        foreach(GetRankResponse player in updatedRanks)
+        foreach (GetRankResponse player in updatedRanks)
         {
             //this filter should be puuid in the future
             var filter = Builders<GetRankResponse>.Filter.Eq(r => r.Data.Name, player.Data.Name);
@@ -136,11 +154,13 @@ public partial class Ranks : IDisposable
 
     public async Task<List<GetRankResponse>> getPlayerRanksHTTPAsync()
     {
-        var players = new List<string>() {"ads/555", "VGB/444", "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house"};
+        var players = new List<string>() { "shua/9731", "Spit%20Slurpin/2222", "Pepp/fishi", "ZeroTwo/2809", "ads/555", "VGB/444", "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house" };
+        // var playersNoah = new List<string>() { "Shua/9731", "Spit%20Slurpin/2222", "Pepp/fishi", "ZeroTwo/2809" };
         var ranks = new List<GetRankResponse>();
 
         static async Task<GetRankResponse?> ProcessRepositoriesAsync(HttpClient client, string player)
         {
+            // var encoded_name = HttpUtility.UrlEncode(player);
             var json = await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v2/mmr/na/{player}");
             GetRankResponse? rank = GetRankResponse.FromJson(json);
             if (rank is null)
@@ -168,6 +188,21 @@ public partial class Ranks : IDisposable
                 ranks.Add(rank);
             }
         }
+        //Noah's people
+        // foreach (var player in playersNoah)
+        // {
+        //     Console.Write($"getting {player}'s rank ...");
+        //     using HttpClient client = new();
+        //     client.DefaultRequestHeaders.Accept.Clear();
+        //     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        //     client.DefaultRequestHeaders.Add("Authorization", Program.henrik_API_Key);
+        //     var rank = await ProcessRepositoriesAsync(client, player);
+        //     if (rank is not null)
+        //     {
+        //         Console.WriteLine(" DONE");
+        //         ranks.Add(rank);
+        //     }
+        // }
 
         return ranks;
     }

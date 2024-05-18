@@ -23,8 +23,17 @@
         {
             @foreach (var player in rankList)
             {
+                suffix = "";
+                @if (player.Data.Name == "ads")
+                {
+                    suffix = " (Perez)";
+                }
+                @if (player.Data.Name == "VGB")
+                {
+                    suffix = " (Augdog)";
+                }
                 <div class="player">
-                    <p class="player_name">@player.Data.Name</p>
+                    <p class="player_name">@(player.Data.Name + @suffix)</p>
                     <img class="rank_icon" src=@player.Data.CurrentData.Images.Small.ToString()>
                     <p class="rr_number">@player.Data.CurrentData.RankingInTier RR</p>
                 </div>
@@ -33,7 +42,7 @@
 
     </div>
     <div class="card">
-        Iron to Immortal
+        Cool Kids
         @if (_isLoading)
         {
             <div class="ring-container">
@@ -47,16 +56,14 @@
         }
         else
         {
-            @foreach (var player in rankList)
+            @foreach (var player in rankListNoah)
             {
-                @if (player.Data.Name == "ads" || player.Data.Name == "VGB")
-                {
                 <div class="player">
                     <p class="player_name">@player.Data.Name</p>
                     <img class="rank_icon" src=@player.Data.CurrentData.Images.Small.ToString()>
                     <p class="rr_number">@player.Data.CurrentData.RankingInTier RR</p>
                 </div>
-                }
+                
             }
         }
 
