@@ -60,8 +60,9 @@
         {
             @foreach (var player in rankListNoah)
             {
+                var link = $"https://tracker.gg/valorant/profile/riot/{@player.Data.Name}%23{@player.Data.Tag}/overview";
                 <div class="player">
-                    <p class="player_name">@player.Data.Name</p>
+                    <a class="player_name" href=@link>@(player.Data.Name)</a>
                     <img class="rank_icon" src=@player.Data.CurrentData.Images.Small.ToString()>
                     <p class="rr_number">@player.Data.CurrentData.RankingInTier RR</p>
                 </div>
