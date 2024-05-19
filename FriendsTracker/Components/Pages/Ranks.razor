@@ -35,7 +35,7 @@
                     suffix = " (Augdog)";
                 }
                 <div class="player">
-                    <a class="player_name" href=@link>@(player.Data.Name + @suffix)</a>
+                    <a class="player_name" target="_blank" href=@link>@(player.Data.Name + @suffix)</a>
                     <img class="rank_icon" src=@player.Data.CurrentData.Images.Small.ToString()>
                     <p class="rr_number">@player.Data.CurrentData.RankingInTier RR</p>
                 </div>
@@ -62,7 +62,7 @@
             {
                 var link = $"https://tracker.gg/valorant/profile/riot/{@player.Data.Name}%23{@player.Data.Tag}/overview";
                 <div class="player">
-                    <a class="player_name" href=@link>@(player.Data.Name)</a>
+                    <a class="player_name" target="_blank" href=@link>@(player.Data.Name)</a>
                     <img class="rank_icon" src=@player.Data.CurrentData.Images.Small.ToString()>
                     <p class="rr_number">@player.Data.CurrentData.RankingInTier RR</p>
                 </div>
