@@ -24,6 +24,7 @@
         {
             @foreach (var player in rankList)
             {
+                var link = $"https://tracker.gg/valorant/profile/riot/{@player.Data.Name}%23{@player.Data.Tag}/overview";
                 suffix = "";
                 @if (player.Data.Name == "ads")
                 {
@@ -34,15 +35,7 @@
                     suffix = " (Augdog)";
                 }
                 <div class="player">
-                    @if (player.Data.Name == "Brewt")
-                    {
-                        <span class="player_name shiny_name">@(player.Data.Name + @suffix)</span>
-                    }
-
-                    else
-                    {
-                        <span class="player_name">@(player.Data.Name + @suffix)</span>
-                    }
+                    <a class="player_name" href=@link>@(player.Data.Name + @suffix)</a>
                     <img class="rank_icon" src=@player.Data.CurrentData.Images.Small.ToString()>
                     <p class="rr_number">@player.Data.CurrentData.RankingInTier RR</p>
                 </div>

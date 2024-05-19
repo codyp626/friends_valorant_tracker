@@ -191,6 +191,8 @@ main {
     margin: 0;
     margin-left: 10px;
     align-self: center;
+    text-decoration: none;
+    color: inherit;
 }
 
 .rank_icon {
