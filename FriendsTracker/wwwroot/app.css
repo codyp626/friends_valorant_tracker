@@ -82,27 +82,30 @@ main {
     align-items: center;
 }
 
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        white-space: nowrap;
-        margin-left: 1.5rem;
-        text-decoration: none;
-    }
+.top-row ::deep a,
+.top-row ::deep .btn-link {
+    white-space: nowrap;
+    margin-left: 1.5rem;
+    text-decoration: none;
+}
 
-    .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
-        text-decoration: underline;
-    }
+.top-row ::deep a:hover,
+.top-row ::deep .btn-link:hover {
+    text-decoration: underline;
+}
 
-    .top-row ::deep a:first-child {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+.top-row ::deep a:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 @media (max-width: 640.98px) {
     .top-row {
         justify-content: space-between;
     }
 
-    .top-row ::deep a, .top-row ::deep .btn-link {
+    .top-row ::deep a,
+    .top-row ::deep .btn-link {
         margin-left: 0;
     }
 }
@@ -131,7 +134,8 @@ main {
         width: 0;
     }
 
-    .top-row, article {
+    .top-row,
+    article {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
     }
@@ -149,14 +153,14 @@ main {
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
 
-    /* LAYOUT STUFF */
+/* LAYOUT STUFF */
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
@@ -191,20 +195,20 @@ main {
 
 .rank_icon {
     margin-left: auto;
-    transform: scale(0.5);
+    transform: scale(0.9);
 }
 
 .rr_number {
-    font-size: 1.2rem; 
+    font-size: 1.2rem;
     align-self: center;
     margin-bottom: 0;
-    /* margin-right: 10px; */
     width: 18%;
 }
 
 .player {
     text-overflow: ellipsis;
     display: flex;
+    height: 7vh
 }
 
 .card_container {
@@ -219,13 +223,15 @@ main {
 
 .lds-ring,
 .lds-ring div {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
+
 .lds-ring {
-  width: 80px;
-  height: 80px;
-  vertical-align: middle;
+    width: 80px;
+    height: 80px;
+    vertical-align: middle;
 }
+
 .ring-container {
     height: inherit;
     position: relative;
@@ -233,33 +239,63 @@ main {
     justify-content: center;
     align-items: center;
 }
+
 .lds-ring div {
-  box-sizing: border-box;
-  display: block;
-  position: absolute;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
-  border: 8px solid currentColor;
-  border-radius: 50%;
-  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: currentColor transparent transparent transparent;
-}
-.lds-ring div:nth-child(1) {
-  animation-delay: -0.45s;
-}
-.lds-ring div:nth-child(2) {
-  animation-delay: -0.3s;
-}
-.lds-ring div:nth-child(3) {
-  animation-delay: -0.15s;
-}
-@keyframes lds-ring {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid currentColor;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: currentColor transparent transparent transparent;
 }
 
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* GLOW EFFECT */
+.shiny_name {
+    background: radial-gradient(circle,rgb(255, 193, 60),rgb(240, 68, 0));
+    background-clip: text;
+    color: transparent;
+    animation: gemini 5s linear infinite;
+    text-shadow:0px 0px 10px #fda5007a, 1px 1px 10px #f59300;
+    background-size: 200% 200%;
+}
+
+@keyframes gemini {
+    
+    0%{
+        background-position: 0% 0%;
+    }
+    
+    50%{
+        background-position: 100% 100%;
+    }
+    
+    100%{
+        background-position: 0% 0%;
+    }
+}
