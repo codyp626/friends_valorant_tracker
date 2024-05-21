@@ -3,8 +3,6 @@ using MongoDB.Driver;
 using MongoDB.Bson.Serialization;
 using FriendsTracker.Components.Infrastructure;
 using System.Net.Http.Headers;
-using System.Text.Encodings.Web;
-using System.Web;
 
 namespace FriendsTracker.Components.Pages;
 
@@ -75,8 +73,8 @@ public partial class Ranks : IDisposable
 
     public IMongoDatabase GetDatabase(string databaseName)
     {
-        var connectionString = $"mongodb+srv://brewt:{Program.mongoKey}@cluster0.xpbkg6w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-        var client = new MongoClient(connectionString);
+        // var connectionString = $"mongodb+srv://brewt:{Program.mongoKey}@cluster0.xpbkg6w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+        var client = new MongoClient(Program.connectionString);
         return client.GetDatabase(databaseName);
     }
 
@@ -87,7 +85,7 @@ public partial class Ranks : IDisposable
         var playersNoah = new List<string>() { "shua", "spit slurpin", "Pepp", "ZeroTwo" };
         // var list = new List<GetRankResponse>();
         var collection = GetDatabase(databaseName).GetCollection<BsonDocument>(collectionName);
-        var filter = Builders<BsonDocument>.Filter.Empty; // Empty filter to match all documents
+        // var filter = Builders<BsonDocument>.Filter.Empty; // Empty filter to match all documents
         try
         {
             var queryableCollection = await collection.AsQueryable().ToListAsync();
