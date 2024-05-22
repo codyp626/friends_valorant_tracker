@@ -18,7 +18,6 @@ public partial class Matches
 
     protected override async Task OnInitializedAsync()
     {
-        // Console.WriteLine("matches page loaded");
         matchResponse = await GetMatchesMongo();
         foreach (var match in matchResponse.Data)
         {

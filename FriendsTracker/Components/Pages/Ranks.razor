@@ -24,8 +24,9 @@
         {
             @foreach (var player in rankList)
             {
-                @* var link = $"https://tracker.gg/valorant/profile/riot/{@player.Data.Name}%23{@player.Data.Tag}/overview"; *@
-                var link = $"/matches/{player.Data.Puuid.ToString()}";
+                var link = $"https://tracker.gg/valorant/profile/riot/{@player.Data.Name}%23{@player.Data.Tag}/overview";
+                @* PLACEHOLDER MATCHES LINK *@
+                @* var link = $"/matches/{player.Data.Puuid.ToString()}"; *@
                 suffix = "";
                 @if (player.Data.Name == "ads")
                 {
@@ -44,34 +45,9 @@
         }
 
     </div>
-    <div class="card">
-        Cool Kids
-        @if (_isLoading)
-        {
-            <div class="ring-container">
-                <div class="lds-ring">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-            </div>
-        }
-        else
-        {
-            @foreach (var player in rankListNoah)
-            {
-                var link = $"https://tracker.gg/valorant/profile/riot/{@player.Data.Name}%23{@player.Data.Tag}/overview";
-                <div class="player">
-                    <a class="player_name" target="_blank" href=@link>@(player.Data.Name)</a>
-                    <img class="rank_icon" src=@player.Data.CurrentData.Images.Small.ToString()>
-                    <p class="rr_number">@player.Data.CurrentData.RankingInTier RR</p>
-                </div>
-
-            }
-        }
-
-    </div>
+    @* <div class="card">
+    Card 2
+    </div> *@
     @* <div class="card">
     Card 3
     </div> *@

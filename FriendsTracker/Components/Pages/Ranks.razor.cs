@@ -73,7 +73,6 @@ public partial class Ranks : IDisposable
 
     public IMongoDatabase GetDatabase(string databaseName)
     {
-        // var connectionString = $"mongodb+srv://brewt:{Program.mongoKey}@cluster0.xpbkg6w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
         var client = new MongoClient(Program.connectionString);
         return client.GetDatabase(databaseName);
     }
@@ -82,24 +81,13 @@ public partial class Ranks : IDisposable
     {
         rankList = new();
         rankListNoah = new();
-        var playersNoah = new List<string>() { "shua", "spit slurpin", "Pepp", "ZeroTwo" };
-        // var list = new List<GetRankResponse>();
-        var collection = GetDatabase(databaseName).GetCollection<BsonDocument>(collectionName);
-        // var filter = Builders<BsonDocument>.Filter.Empty; // Empty filter to match all documents
+        var collection = GetDatabase(databaseName).GetCollection<GetRankResponse>(collectionName);
         try
         {
             var queryableCollection = await collection.AsQueryable().ToListAsync();
-            foreach (BsonDocument bson_rank in queryableCollection)
+            foreach (var rank in queryableCollection)
             {
-                GetRankResponse rank = BsonSerializer.Deserialize<GetRankResponse>(bson_rank);
-                if (playersNoah.Contains(rank.Data.Name))
-                {
-                    rankListNoah.Add(rank);
-                }
-                else
-                {
-                    rankList.Add(rank);
-                }
+                rankList.Add(rank);
             }
         }
         catch (Exception ex)
@@ -149,12 +137,10 @@ public partial class Ranks : IDisposable
     public async Task<List<GetRankResponse>> getPlayerRanksHTTPAsync()
     {
         var players = new List<string>() { "shua/9731", "spit%20slurpin/2222", "Pepp/fishi", "ZeroTwo/2809", "ads/555", "VGB/444", "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house" };
-        // var playersNoah = new List<string>() { "Shua/9731", "Spit%20Slurpin/2222", "Pepp/fishi", "ZeroTwo/2809" };
         var ranks = new List<GetRankResponse>();
 
         static async Task<GetRankResponse?> ProcessRepositoriesAsync(HttpClient client, string player)
         {
-            // var encoded_name = HttpUtility.UrlEncode(player);
             var json = await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v2/mmr/na/{player}");
             GetRankResponse? rank = GetRankResponse.FromJson(json);
             if (rank is null)
@@ -182,21 +168,6 @@ public partial class Ranks : IDisposable
                 ranks.Add(rank);
             }
         }
-        //Noah's people
-        // foreach (var player in playersNoah)
-        // {
-        //     Console.Write($"getting {player}'s rank ...");
-        //     using HttpClient client = new();
-        //     client.DefaultRequestHeaders.Accept.Clear();
-        //     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        //     client.DefaultRequestHeaders.Add("Authorization", Program.henrik_API_Key);
-        //     var rank = await ProcessRepositoriesAsync(client, player);
-        //     if (rank is not null)
-        //     {
-        //         Console.WriteLine(" DONE");
-        //         ranks.Add(rank);
-        //     }
-        // }
 
         return ranks;
     }
