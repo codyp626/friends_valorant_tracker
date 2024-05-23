@@ -3,14 +3,18 @@ using MongoDB.Driver;
 using MongoDB.Bson.Serialization;
 using FriendsTracker.Components.Infrastructure;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using Microsoft.JSInterop;
 
 namespace FriendsTracker.Components.Pages;
 
 public partial class Ranks : IDisposable
 {
     private bool _isLoading = true;
+    public string text = "";
     public List<GetRankResponse> rankList = new();
-    public List<GetRankResponse> rankListNoah = new();
+
+    public List<String> playerNames = new List<string>() { "shua/9731", "spit%20slurpin/2222", "Pepp/fishi", "ZeroTwo/2809", "ads/555", "VGB/444", "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house" };
 
     public DateTime lastUpdated = DateTime.MinValue;
     private string timeSinceLastUpdated = "";
@@ -20,18 +24,21 @@ public partial class Ranks : IDisposable
     protected override async Task OnInitializedAsync()
     {
         await getMongoRanksAsync("player_data_db", "rank");
-
         rankList = rankList.OrderByDescending(r => r.Data.CurrentData.Elo).ToList();
-        rankListNoah = rankListNoah.OrderByDescending(r => r.Data.CurrentData.Elo).ToList();
 
-        _isLoading = false;
-        await GetTimeAsync("rank");
+        // text = new(await JS.InvokeAsync<string>("testFunction"));
+        Console.WriteLine($"text = {text}");
+        
 
         //Timer stuff
+        await GetTimeAsync("rank");
         UpdateTimeSinceLastUpdated();
         timer = new System.Timers.Timer(1000); // 1 second interval
         timer.Elapsed += (sender, e) => InvokeAsync(UpdateTimeSinceLastUpdated);
         timer.Start();
+
+        _isLoading = false;
+        StateHasChanged();
     }
 
     private void UpdateTimeSinceLastUpdated()
@@ -80,7 +87,6 @@ public partial class Ranks : IDisposable
     public async Task getMongoRanksAsync(string databaseName, string collectionName)
     {
         rankList = new();
-        rankListNoah = new();
         var collection = GetDatabase(databaseName).GetCollection<GetRankResponse>(collectionName);
         try
         {
@@ -136,13 +142,23 @@ public partial class Ranks : IDisposable
 
     public async Task<List<GetRankResponse>> getPlayerRanksHTTPAsync()
     {
-        var players = new List<string>() { "shua/9731", "spit%20slurpin/2222", "Pepp/fishi", "ZeroTwo/2809", "ads/555", "VGB/444", "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house" };
         var ranks = new List<GetRankResponse>();
 
         static async Task<GetRankResponse?> ProcessRepositoriesAsync(HttpClient client, string player)
         {
             var json = await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v2/mmr/na/{player}");
             GetRankResponse? rank = GetRankResponse.FromJson(json);
+
+            var mmr = MMRHistoryResponse.FromJson(await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v1/lifetime/mmr-history/na/{player}?size=10"));
+            Console.WriteLine($"got mmr for {mmr.Name}");
+            rank.Data.MMR = mmr;
+
+
+            //this will kinda make page load times abysmal :((((
+            // var matches = MatchResponse.FromJson(await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v1/lifetime/mmr-history/na/{player}?size=10"));
+            // Console.WriteLine($"got matches for {matches.Data.First().Players.AllPlayers.First()}");
+            // rank.Data.MatchHistory = matches;
+
             if (rank is null)
             {
                 Console.WriteLine("API ERROR");
@@ -154,7 +170,7 @@ public partial class Ranks : IDisposable
             }
         }
 
-        foreach (var player in players)
+        foreach (var player in playerNames)
         {
             Console.Write($"got {player}'s rank ... ");
             using HttpClient client = new();
@@ -168,7 +184,6 @@ public partial class Ranks : IDisposable
                 ranks.Add(rank);
             }
         }
-
         return ranks;
     }
 }

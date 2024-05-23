@@ -22,6 +22,10 @@ public partial class GetRankResponse
 
 public partial class Rank
 {
+    public MMRHistoryResponse MMR { get; set; } = null!;
+
+    public MatchResponse MatchHistory { get; set; } = null!;
+
     [BsonElement ("name")]
     [JsonProperty("name")]
     public string Name { get; set; } = null!;

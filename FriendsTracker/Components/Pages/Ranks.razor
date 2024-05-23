@@ -1,48 +1,78 @@
 ﻿@page "/rank"
+@inject IJSRuntime JS
+
 @using FriendsTracker.Components.Pages;
 
-<button class="btn btn-primary" @onclick="@updateMongoRanksAsync">Force Update</button>
-<p
-    style="padding-left: 5px; display: inline; color:rgb(167, 167, 167); font-family: Rajdhani; font-weight: 700; font-size: 1.3em">
-    Updated @timeSinceLastUpdated
-</p>
+<div style="    display: flex;
+    justify-content: center;
+    align-content: space-around;
+    /* align-items: center; */
+    margin-bottom: 0;
+    height: min-content;
+    align-items: center;">
+    <button class="btn btn-primary" @onclick="@updateMongoRanksAsync">Force Update</button>
+    @* <button class="btn btn-primary" @onclick="@buttonFunction">Get MMR</button> *@
+    @* <button class="btn btn-primary" @onclick="@updateMongoMMRAsync">Update MMR</button> *@
+
+
+    @if (_isLoading)
+    {
+        <div class="ring-container">
+            <div class="lds-ring">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p
+            style="margin-bottom: 0; padding-left: 5px; display: inline; color:rgb(167, 167, 167); font-family: Rajdhani; font-weight: 700; font-size: 1.3em">
+            Updated: @timeSinceLastUpdated
+        </p>
+    }
+
+
+</div>
+
 <div class="card_container">
     <div class="card">
         Ranks
-        @if (_isLoading)
+        @foreach (var player in rankList)
         {
-            <div class="ring-container">
-                <div class="lds-ring">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
+            @* var playerId = "player_" + player.Data.Puuid.ToString(); *@
+            var playerId = "player_" + 1;
+            var link = $"https://tracker.gg/valorant/profile/riot/{@player.Data.Name}%23{@player.Data.Tag}/overview";
+            @* PLACEHOLDER MATCHES LINK *@
+            @* var link = $"/matches/{player.Data.Puuid.ToString()}"; *@
+            suffix = "";
+            @if (player.Data.Name == "ads")
+            {
+                suffix = " (Perez)";
+            }
+            @if (player.Data.Name == "VGB")
+            {
+                suffix = " (Augdog)";
+            }
+            <div class="player">
+                <a class="player_name" target="blank" href=@link>@(player.Data.Name + @suffix)</a>
+                @* <span class="elo_graph" id="elo_graph_@playerId"></span> *@
+                @* <span class="elo_graph" id="elo_graph_@playerId">@text</span> *@
+                <script>
+                    @* var test = @playerId; *@
+                    @* console.log(@playerId); *@
+                    var eloData_@playerId = Json.Serialize(@player.Data.MMR);
+
+                    @* console.log(); *@
+                    renderGraph("elo_graph_@playerId", Json.Serialize(player.Data.MMR));
+                </script>
+                <img class="rank_icon" src=@player.Data.CurrentData.Images.Small.ToString()>
+                <p class="rr_number">@player.Data.CurrentData.RankingInTier RR</p>
             </div>
         }
-        else
-        {
-            @foreach (var player in rankList)
-            {
-                var link = $"https://tracker.gg/valorant/profile/riot/{@player.Data.Name}%23{@player.Data.Tag}/overview";
-                @* PLACEHOLDER MATCHES LINK *@
-                @* var link = $"/matches/{player.Data.Puuid.ToString()}"; *@
-                suffix = "";
-                @if (player.Data.Name == "ads")
-                {
-                    suffix = " (Perez)";
-                }
-                @if (player.Data.Name == "VGB")
-                {
-                    suffix = " (Augdog)";
-                }
-                <div class="player">
-                    <a class="player_name" href=@link>@(player.Data.Name + @suffix)</a>
-                    <img class="rank_icon" src=@player.Data.CurrentData.Images.Small.ToString()>
-                    <p class="rr_number">@player.Data.CurrentData.RankingInTier RR</p>
-                </div>
-            }
-        }
+
 
     </div>
     @* <div class="card">
