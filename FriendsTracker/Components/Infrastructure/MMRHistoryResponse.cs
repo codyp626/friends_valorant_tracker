@@ -50,7 +50,7 @@ namespace FriendsTracker.Components.Infrastructure
         public int? LastMmrChange { get; set; }
 
         [BsonElement("elo")]
-        public int? Elo { get; set; }
+        public int Elo { get; set; }
 
         [BsonElement("date")]
         public DateTimeOffset Date { get; set; }
@@ -90,6 +90,31 @@ namespace FriendsTracker.Components.Infrastructure
 
         [BsonElement("after")]
         public int? After { get; set; }
+    }
+
+    public partial class MMRWrapper
+    {
+        public MMRHistory[]? mmrArray { get; set; }
+
+        public MMRWrapper(MMRHistory[] mmrArray)
+        {
+            this.mmrArray = mmrArray;
+        }
+        
+    }
+
+    public partial class MMRHistory
+    {
+        public long DateOffset { get; set; }
+
+        public int Elo { get; set; }
+
+        public MMRHistory(long DateOffset, int Elo)
+        {
+            this.Elo = Elo;
+            this.DateOffset = DateOffset;
+        }
+
     }
 
     public partial class MMRHistoryResponse

@@ -24,74 +24,114 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    @* <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> *@
 
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/mouse-wheel-zoom.js"></script>
     <HeadOutlet />
 </head>
 
 <body>
     <Routes @rendermode="new InteractiveServerRenderMode(false)" />
     <script src="_framework/blazor.web.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script>
-        function renderGraph(elementId, data)
-        {
-            console.log("renderGraph called");
-            var ctx = document.getElementById(elementId).getContext('2d');
-            var labels = data.map(item => new Date(item.date * 1000)); // Convert epoch to JavaScript date
-            var elo = data.map(item => item.elo);
-            new Chart
-                (ctx,
+
+
+        function testFunction2(mmrArray, dateArray, puuid) {
+            Highcharts.chart(puuid, {
+
+                chart: {
+                    type: "area",
+                    backgroundColor: "rgb(30,30,30)",
+                    zooming: {
+                        mouseWheel: true,
+                        type: "x",
+                        pinchType: "x",
+                    },
+                    panning: true,
+                    panKey: 'shift',
+                },
+
+                tooltip: {
+                    formatter: function () {
+                        return this.y + '</b> elo <br> on ' + (new Date(dateArray[this.x] * 1000).getMonth() + 1) + '/' + new Date(dateArray[this.x] * 1000).getDate();
+                    },
+                    backgroundColor: {
+                        linearGradient: [0, 0, 0, 60],
+                        stops: [
+                            [0, "rgb(20,20,20)"],
+                            [1, "rgb(40,40,40)"]
+                        ]
+                    },
+                    style: {
+                        color: '#FFFFFF'
+                    },
+                    borderWidth: 1,
+                    borderColor: '#AAA'
+                },
+
+                legend: {
+                    enabled: false
+                },
+
+                title: {
+                    text: null,
+                },
+
+                xAxis: {
+                    type: 'datetime',
+                    visible: false,
+                    gridLineWidth: 2,
+                    gridLineColor: "rgb(20,20,20)",
+                    tickLength: 0,
+                    tickWidth: 0,
+                    labels:
                     {
-                        type: 'line',
-                        data:
+                        enabled: false
+                    },
+                },
+
+                yAxis: {
+                    visible: false
+                },
+                credits: {
+                    enabled: false
+                },
+
+                plotOptions:
+                {
+                    series:
+                    {
+                        threshold: null,
+                        lineWidth: 4,
+                        color: "rgb(160,0,0)",
+                        marker:
                         {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Elo',
-                                data: elo,
-                                borderColor: 'rgba(75, 192, 192, 1)',
-                                borderWidth: 1,
-                                fill: false
-                            }]
-                        },
-                        options:
-                        {
-                            scales: {
-                                x: 
-                                {
-                                    type: 'time',
-                                    time: 
-                                    {
-                                        unit: 'day'
-                                    },
-                                    title: 
-                                    {
-                                        display: true,
-                                        text: 'Date'
-                                    }
-                                },
-                                y: 
-                                {
-                                    title: 
-                                    {
-                                        display: true,
-                                        text: 'Elo'
-                                    }
-                                }
-                            },
-                            responsive: true,
-                            maintainAspectRatio: false
+                            enabled: false,
                         }
                     }
 
-                );
-            
+                },
+
+                series:
+                    [{
+                        name: "Elo",
+                        data: mmrArray
+                    }],
+
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                    }]
+                }
+
+            });
+
+
         }
     </script>
-
 </body>
 
 </html>
