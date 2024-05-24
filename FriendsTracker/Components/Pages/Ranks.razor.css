@@ -11,9 +11,9 @@
     font-family: Rajdhani;
     font-weight: 700;
     font-size: 1.5rem;
-    min-width: 45vh;
+    /* min-width: 45vh; */
     max-width: 70vh;
-    overflow-y:auto;
+    /* overflow-y:auto; */
 }
 
 /* .card:hover {
@@ -21,12 +21,18 @@
 } */
 
 .player_name {
+    white-space: nowrap;
     text-align: left;
     margin: 0;
     margin-left: 10px;
     align-self: center;
     text-decoration: none;
     color: inherit;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: auto;
+    min-width: 40%;
+    font-size: 80%;
 }
 
 .player_name:hover {
@@ -37,23 +43,24 @@
     /* margin-left: auto; */
     /* align-self: right; */
     transform: scale(0.8);
+    size: 11vw;
     /* margin-right: auto; */
 }
 
 .rr_number {
-    font-size: 1.1rem;
+    white-space: nowrap;
+    font-size: 0.7em;
     align-self: center;
     margin-bottom: 0;
     width: 11%;
-    margin-right: 2%;
 }
 
 .player {
     text-overflow: ellipsis;
     display: flex;
     flex-wrap: nowrap;
-    height: 7vh;
-    max-height: 7%
+    height: 6vh;
+    /* height: 7% */
 }
 
 .elo_graph{
@@ -61,9 +68,10 @@
     border-style: solid;
     border-width: 1px;
 
-    margin-left: auto;
-    min-width: 28vw;
-    /* width: 28vw */
+    /* margin-left: auto; */
+    margin-right: auto;
+    /* width: fit-content; */
+    width: 48%
 }
 
 .card_container {
