@@ -12,6 +12,8 @@ builder.Services.AddHttpClient();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.WebHost.UseStaticWebAssets();
+
 //mongo connection string key
 // mongoKey = builder.Configuration["Apps:MongoDBPassword"];
 try
@@ -27,6 +29,7 @@ henrik_API_Key = builder.Configuration["Apps:HenrikAPI"];
 Console.WriteLine("secrets.txt not found, okay while testing");
 }
 
+connectionString = $"mongodb+srv://brewt:{mongoKey}@cluster0.xpbkg6w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -52,4 +55,6 @@ public partial class Program ()
 {
     public static string? mongoKey { get; private set; }
     public static string? henrik_API_Key { get; private set; }
+    public static string? connectionString { get; private set; }
+
 }

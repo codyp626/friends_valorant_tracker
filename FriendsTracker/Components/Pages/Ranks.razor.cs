@@ -1,10 +1,9 @@
-using MongoDB.Bson;
+
 using MongoDB.Driver;
-using MongoDB.Bson.Serialization;
 using FriendsTracker.Components.Infrastructure;
 using System.Net.Http.Headers;
-using System.Text.Encodings.Web;
-using System.Web;
+using Microsoft.JSInterop;
+using MongoDB.Driver.Linq;
 
 namespace FriendsTracker.Components.Pages;
 
@@ -12,7 +11,8 @@ public partial class Ranks : IDisposable
 {
     private bool _isLoading = true;
     public List<GetRankResponse> rankList = new();
-    public List<GetRankResponse> rankListNoah = new();
+
+    public List<String> playerNames = new List<string>() { "shua/9731", "spit%20slurpin/2222", "Pepp/fishi", "ZeroTwo/2809", "ads/555", "VGB/444", "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house" };
 
     public DateTime lastUpdated = DateTime.MinValue;
     private string timeSinceLastUpdated = "";
@@ -21,19 +21,36 @@ public partial class Ranks : IDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        await getMongoRanksAsync("player_data_db", "rank");
-
+        await getMongoRanksAsync("player_data_db", "rank_test");
         rankList = rankList.OrderByDescending(r => r.Data.CurrentData.Elo).ToList();
-        rankListNoah = rankListNoah.OrderByDescending(r => r.Data.CurrentData.Elo).ToList();
-
-        _isLoading = false;
-        await GetTimeAsync("rank");
 
         //Timer stuff
+        await GetTimeAsync("rank");
         UpdateTimeSinceLastUpdated();
         timer = new System.Timers.Timer(1000); // 1 second interval
         timer.Elapsed += (sender, e) => InvokeAsync(UpdateTimeSinceLastUpdated);
         timer.Start();
+
+        _isLoading = false;
+        await displayGraphs();
+        StateHasChanged();
+    }
+
+    private async Task displayGraphs()
+    {
+        foreach (var rank in rankList)
+        {
+            StateHasChanged();
+            var eloArray = rank.Data.MMR.mmrArray.Select(d => d.Elo).Reverse().ToArray();
+            var dateArray = rank.Data.MMR.mmrArray.Select(d => d.DateOffset).Reverse().ToArray();
+            int[][] combo = new int[dateArray.Length][];
+            for (int i = 0; i < dateArray.Length; i++)
+            {
+                combo[i] = [(int)dateArray[i], eloArray[i]];
+            }
+
+            await JSRuntime.InvokeVoidAsync("testFunction2", eloArray, dateArray, rank.Data.Puuid);
+        }
     }
 
     private void UpdateTimeSinceLastUpdated()
@@ -75,33 +92,20 @@ public partial class Ranks : IDisposable
 
     public IMongoDatabase GetDatabase(string databaseName)
     {
-        var connectionString = $"mongodb+srv://brewt:{Program.mongoKey}@cluster0.xpbkg6w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-        var client = new MongoClient(connectionString);
+        var client = new MongoClient(Program.connectionString);
         return client.GetDatabase(databaseName);
     }
 
     public async Task getMongoRanksAsync(string databaseName, string collectionName)
     {
         rankList = new();
-        rankListNoah = new();
-        var playersNoah = new List<string>() { "shua", "spit slurpin", "Pepp", "ZeroTwo" };
-        // var list = new List<GetRankResponse>();
-        var collection = GetDatabase(databaseName).GetCollection<BsonDocument>(collectionName);
-        var filter = Builders<BsonDocument>.Filter.Empty; // Empty filter to match all documents
+        var collection = GetDatabase(databaseName).GetCollection<GetRankResponse>(collectionName);
         try
         {
             var queryableCollection = await collection.AsQueryable().ToListAsync();
-            foreach (BsonDocument bson_rank in queryableCollection)
+            foreach (var rank in queryableCollection)
             {
-                GetRankResponse rank = BsonSerializer.Deserialize<GetRankResponse>(bson_rank);
-                if (playersNoah.Contains(rank.Data.Name))
-                {
-                    rankListNoah.Add(rank);
-                }
-                else
-                {
-                    rankList.Add(rank);
-                }
+                rankList.Add(rank);
             }
         }
         catch (Exception ex)
@@ -136,7 +140,7 @@ public partial class Ranks : IDisposable
         _isLoading = true;
         var database = GetDatabase("player_data_db");
         await updateTimeAsync(database);
-        var collection = database.GetCollection<GetRankResponse>("rank");
+        var collection = database.GetCollection<GetRankResponse>("rank_test");
         var updatedRanks = await getPlayerRanksHTTPAsync();
         foreach (GetRankResponse player in updatedRanks)
         {
@@ -150,15 +154,23 @@ public partial class Ranks : IDisposable
 
     public async Task<List<GetRankResponse>> getPlayerRanksHTTPAsync()
     {
-        var players = new List<string>() { "shua/9731", "spit%20slurpin/2222", "Pepp/fishi", "ZeroTwo/2809", "ads/555", "VGB/444", "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house" };
-        // var playersNoah = new List<string>() { "Shua/9731", "Spit%20Slurpin/2222", "Pepp/fishi", "ZeroTwo/2809" };
         var ranks = new List<GetRankResponse>();
 
         static async Task<GetRankResponse?> ProcessRepositoriesAsync(HttpClient client, string player)
         {
-            // var encoded_name = HttpUtility.UrlEncode(player);
             var json = await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v2/mmr/na/{player}");
             GetRankResponse? rank = GetRankResponse.FromJson(json);
+
+            var mmr = MMRHistoryResponse.FromJson(await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v1/lifetime/mmr-history/na/{player}?size=20"));
+            var extracted = new MMRWrapper(mmr.Data.Select(d => new MMRHistory(d.Date.ToUnixTimeSeconds(), d.Elo)).ToArray());
+            rank.Data.MMR = extracted;
+
+
+            //this will kinda make page load times abysmal :((((
+            // var matches = MatchResponse.FromJson(await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v1/lifetime/mmr-history/na/{player}?size=10"));
+            // Console.WriteLine($"got matches for {matches.Data.First().Players.AllPlayers.First()}");
+            // rank.Data.MatchHistory = matches;
+
             if (rank is null)
             {
                 Console.WriteLine("API ERROR");
@@ -170,7 +182,7 @@ public partial class Ranks : IDisposable
             }
         }
 
-        foreach (var player in players)
+        foreach (var player in playerNames)
         {
             Console.Write($"got {player}'s rank ... ");
             using HttpClient client = new();
@@ -184,22 +196,6 @@ public partial class Ranks : IDisposable
                 ranks.Add(rank);
             }
         }
-        //Noah's people
-        // foreach (var player in playersNoah)
-        // {
-        //     Console.Write($"getting {player}'s rank ...");
-        //     using HttpClient client = new();
-        //     client.DefaultRequestHeaders.Accept.Clear();
-        //     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        //     client.DefaultRequestHeaders.Add("Authorization", Program.henrik_API_Key);
-        //     var rank = await ProcessRepositoriesAsync(client, player);
-        //     if (rank is not null)
-        //     {
-        //         Console.WriteLine(" DONE");
-        //         ranks.Add(rank);
-        //     }
-        // }
-
         return ranks;
     }
 }

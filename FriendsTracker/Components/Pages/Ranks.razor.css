@@ -1,0 +1,175 @@
+.card {
+    margin: 10px;
+    display: inline-block;
+    width: 90vw;
+    height: 90vh;
+    background-color: #1a1a1a;
+    border-radius: 20px;
+    transition: all .3s;
+    text-align: center;
+    color: #979797;
+    font-family: Rajdhani;
+    font-weight: 700;
+    font-size: 1.5rem;
+    min-width: 45vh;
+    max-width: 70vh;
+    overflow-y:auto;
+}
+
+/* .card:hover {
+    box-shadow: 0px 0px 30px 1px rgba(0, 255, 117, 0.50);
+} */
+
+.player_name {
+    text-align: left;
+    margin: 0;
+    margin-left: 10px;
+    align-self: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.player_name:hover {
+    color: rgb(20, 102, 150)
+}
+
+.rank_icon {
+    /* margin-left: auto; */
+    /* align-self: right; */
+    transform: scale(0.8);
+    /* margin-right: auto; */
+}
+
+.rr_number {
+    font-size: 1.1rem;
+    align-self: center;
+    margin-bottom: 0;
+    width: 11%;
+    margin-right: 2%;
+}
+
+.player {
+    text-overflow: ellipsis;
+    display: flex;
+    flex-wrap: nowrap;
+    height: 7vh;
+    max-height: 7%
+}
+
+.elo_graph{
+    border: rgb(73, 73, 73);
+    border-style: solid;
+    border-width: 1px;
+
+    margin-left: auto;
+    min-width: 28vw;
+    /* width: 28vw */
+}
+
+.card_container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* LOADING RING */
+
+.lds-ring,
+.lds-ring div {
+    box-sizing: border-box;
+}
+
+.lds-ring {
+    width: 80px;
+    height: 80px;
+    vertical-align: middle;
+}
+
+.ring-container {
+    scale: 0.5;
+    height: inherit;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid currentColor;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: currentColor transparent transparent transparent;
+}
+
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.highcharts-figure,
+.highcharts-data-table table {
+    min-width: 310px;
+    max-width: 800px;
+    margin: 1em auto;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #11e40a;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #ff0000;
+}
+
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+    padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tr:nth-child(even) {
+    background: #06da9a;
+}
+
+.highcharts-data-table tr:hover {
+    background: #ee04da;
+}
