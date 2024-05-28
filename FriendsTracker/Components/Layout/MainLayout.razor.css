@@ -4,6 +4,11 @@
     flex-direction: column;
 }
 
+.top-row, article {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
 main {
     flex: 1;
 }
@@ -71,8 +76,8 @@ main {
     }
 
     .top-row, article {
-        padding-left: 2rem !important;
-        padding-right: 1.5rem !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
     }
 }
 
