@@ -4,6 +4,8 @@ using FriendsTracker.Components.Infrastructure;
 using System.Net.Http.Headers;
 using Microsoft.JSInterop;
 using MongoDB.Driver.Linq;
+using System.Threading;
+using System.Diagnostics.Contracts;
 
 namespace FriendsTracker.Components.Pages;
 
@@ -83,6 +85,16 @@ public partial class Ranks : IDisposable
             return $"{(int)timeSpan.TotalMinutes} minute{plural} ago";
         }
         return $"{(int)timeSpan.TotalSeconds} seconds ago";
+    }
+
+    public void buttonFunc()
+    {
+        _isLoading = true;
+
+        Console.WriteLine("loading...");
+        StateHasChanged();
+        Thread.Sleep(5);
+        // _isLoading = false;
     }
 
     public void Dispose()

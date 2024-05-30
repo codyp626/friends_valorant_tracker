@@ -14,7 +14,9 @@
     height: min-content;
     align-items: center;">
     <button class="btn btn-primary" @onclick="@updateMongoRanksAsync">Force Update</button>
-
+        <p style="margin-bottom: 0; padding-left: 5px; display: inline; color:rgb(167, 167, 167); font-family: Rajdhani; font-weight: 700; font-size: 1.3em">
+            Updated:
+        </p>
     @if (_isLoading)
     {
         <div class="ring-container">
@@ -28,10 +30,9 @@
     }
     else
     {
-        <p
-            style="margin-bottom: 0; padding-left: 5px; display: inline; color:rgb(167, 167, 167); font-family: Rajdhani; font-weight: 700; font-size: 1.3em">
-            Updated: @timeSinceLastUpdated
-        </p>
+        <span style="margin-bottom: 0; padding-left: 5px; display: inline; color:rgb(167, 167, 167); font-family: Rajdhani; font-weight: 600; font-size: 1.3em">
+            @timeSinceLastUpdated
+        </span>
     }
 
 
@@ -39,7 +40,7 @@
 
 <div class="card_container">
     <div class="card">
-        Ranks
+        @* Ranks *@
         @foreach (var player in rankList)
         {
             var link = $"https://tracker.gg/valorant/profile/riot/{@player.Data.Name}%23{@player.Data.Tag}/overview";

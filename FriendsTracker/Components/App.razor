@@ -35,19 +35,17 @@
     <Routes @rendermode="new InteractiveServerRenderMode(false)" />
     <script src="_framework/blazor.web.js"></script>
     <script>
-
-
         function testFunction2(mmrArray, dateArray, puuid) {
             Highcharts.chart(puuid, {
 
                 chart: {
                     type: "area",
-                    backgroundColor: "rgb(30,30,30)",
+                    backgroundColor: "rgb(15,23,23)",
                 },
 
                 tooltip: {
                     formatter: function () {
-                        return this.y + '</b> elo <br> on ' + (new Date(dateArray[this.x] * 1000).getMonth() + 1) + '/' + new Date(dateArray[this.x] * 1000).getDate();
+                        return eloToRankString(this.y) + '</b><br> on ' + (new Date(dateArray[this.x] * 1000).getMonth() + 1) + '/' + new Date(dateArray[this.x] * 1000).getDate();
                     },
                     backgroundColor: {
                         linearGradient: [0, 0, 0, 60],
@@ -73,56 +71,85 @@
 
                 xAxis: {
                     type: 'datetime',
-                    visible: false,
+                    visible: true,
                     gridLineWidth: 2,
                     gridLineColor: "rgb(20,20,20)",
-                    tickLength: 0,
-                    tickWidth: 0,
-                    labels:
-                    {
-                        enabled: false
-                    },
-                },
-
-                yAxis: {
-                    visible: false
-                },
-                credits: {
+        @* tickInterval: 5, *@
+                tickLength: 0,
+                tickWidth: 0,
+                labels:
+                {
                     enabled: false
                 },
-
-                plotOptions:
-                {
-                    series:
-                    {
-                        threshold: null,
-                        lineWidth: 4,
-                        color: "rgb(160,0,0)",
-                        marker:
-                        {
-                            enabled: false,
-                        }
-                    }
-
                 },
 
-                series:
-                    [{
-                        name: "Elo",
-                        data: mmrArray
-                    }],
+        yAxis: {
+            visible: false
+        },
+        credits: {
+            enabled: false
+        },
 
-                responsive: {
-                    rules: [{
-                        condition: {
-                            maxWidth: 500
-                        },
-                    }]
-                }
+        plotOptions:
+        {
+            series:
+            {
+                threshold: null,
+                    lineWidth: 4,
+                        color: "rgb(200,0,0)",
+                            marker:
+                {
+                    enabled: false,
+                        }
+            }
+
+        },
+
+        series:
+        [{
+            name: "Elo",
+            data: mmrArray
+        }],
+
+            responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+            }]
+        }
 
             });
 
 
+        }
+
+        function eloToRankString(elo) {
+            const ranks = ["Iron", "Bronze", "Silver", "Gold", "Plat", "Dia", "Asc"];
+            const tierSize = 100;
+
+            // Calculate the base index in ranks array
+            let baseRankIndex = Math.floor(elo / (tierSize * 3));
+            let adjustedElo = elo % (tierSize * 3);
+            let tier = Math.floor(adjustedElo / tierSize) + 1; // 1, 2, or 3
+            let rr = adjustedElo % tierSize;
+
+            // Handle cases where elo is beyond the highest defined rank (Ascendant 3)
+            if (baseRankIndex >= ranks.length) {
+                baseRankIndex = ranks.length; // Set to Immortal
+                let immortalElo = elo - (ranks.length * 3 * tierSize);
+                tier = Math.floor(immortalElo / tierSize) + 1;
+                rr = immortalElo;
+
+                // Cap the tier at 3 for Immortal
+                if (tier > 3) {
+                    tier = 3;
+                }
+                return `Immo ${tier}: ${rr} rr`;
+            }
+
+            const rank = ranks[baseRankIndex];
+            return `${rank} ${tier}: ${rr} rr`;
         }
     </script>
 </body>
