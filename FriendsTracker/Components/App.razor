@@ -35,17 +35,17 @@
     <Routes @rendermode="new InteractiveServerRenderMode(false)" />
     <script src="_framework/blazor.web.js"></script>
     <script>
-        function testFunction2(mmrArray, dateArray, puuid) {
+        function mmrChart(mmrArray, dateArray, puuid) {
             Highcharts.chart(puuid, {
 
                 chart: {
                     type: "area",
-                    backgroundColor: "rgb(15,23,23)",
+                    backgroundColor: "rgb(15,15,15)",
                 },
 
                 tooltip: {
                     formatter: function () {
-                        return eloToRankString(this.y) + '</b><br> on ' + (new Date(dateArray[this.x] * 1000).getMonth() + 1) + '/' + new Date(dateArray[this.x] * 1000).getDate();
+                        return eloToRankString(this.y) + '</b><br>on ' + (new Date(dateArray[this.x] * 1000).getMonth() + 1) + '/' + new Date(dateArray[this.x] * 1000).getDate();
                     },
                     backgroundColor: {
                         linearGradient: [0, 0, 0, 60],
@@ -69,23 +69,31 @@
                     text: null,
                 },
 
-                xAxis: {
-                    type: 'datetime',
-                    visible: true,
-                    gridLineWidth: 2,
-                    gridLineColor: "rgb(20,20,20)",
-        @* tickInterval: 5, *@
-                tickLength: 0,
-                tickWidth: 0,
-                labels:
+                xAxis: 
                 {
+                    visible: true,
+                    tickLength: 0,
+                    tickWidth: 0,
+                    labels:
+                    {
                     enabled: false
-                },
+                    },
                 },
 
         yAxis: {
-            visible: false
+            visible: false,
+            labels:
+            {
+                enabled: false
+            },
+            tickLength: 0,
+            tickWidth: 0,
+            title: 
+            {
+                text: null,
+            },
         },
+
         credits: {
             enabled: false
         },

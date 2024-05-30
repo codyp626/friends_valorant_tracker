@@ -51,7 +51,7 @@ public partial class Ranks : IDisposable
                 combo[i] = [(int)dateArray[i], eloArray[i]];
             }
 
-            await JSRuntime.InvokeVoidAsync("testFunction2", eloArray, dateArray, rank.Data.Puuid);
+            await JSRuntime.InvokeVoidAsync("mmrChart", eloArray, dateArray, rank.Data.Puuid);
         }
     }
 

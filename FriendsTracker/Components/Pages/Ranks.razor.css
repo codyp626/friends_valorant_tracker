@@ -1,8 +1,7 @@
 .card {
     margin: 1rem;
     display: inline-block;
-    width: 100vh;
-    /* height: 85vh; */
+    width: 100%;
     background-color: #1a1a1a;
     border-radius: 20px;
     transition: all .3s;
@@ -11,34 +10,24 @@
     font-family: Rajdhani;
     font-weight: 700;
     font-size: 1.5rem;
-    /* align-content: ; */
-    /* align-content: c; */
-    /* font-size: 20px; */
-    /* font-size: 5vw; */
-    /* min-width: 45vh; */
     max-width: 1000px;
-    /* overflow-y:auto; */
 }
 
-/* .card:hover {
-    box-shadow: 0px 0px 30px 1px rgba(0, 255, 117, 0.50);
-} */
-
 .player_name {
+    /* OVERFLOW */
     white-space: nowrap;
-    text-align: left;
-    margin: 0;
-    margin-left: 0.3em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
     align-self: center;
     text-decoration: none;
     color: inherit;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    /* width: auto; */
-    max-width: 31%;
+
+    max-width: 33%;
     font-size: 1.5rem;
-    /* margin-right: 0; */
-    margin-right: auto;
+
+    margin-right: 0;
+    margin-left: 0.3em;
 }
 
 .player_name:hover {
@@ -46,14 +35,8 @@
 }
 
 .rank_icon {
-    /* margin-left: auto; */
-    /* align-self: right; */
     transform: scale(0.8);
-    /* width: 11%;
-    height: 99%; */
     size:11vw;
-    /* max-heigt: 33%; */
-    /* margin-right: auto; */
 }
 
 .rr_number {
@@ -79,21 +62,11 @@
     border-radius: 10px;
     display: flex;
     background-color: #0f0f0f;
-    /* flex-wrap: nowrap; */
     height: 6vh;
-    /* align-self: ce; */
-    /* height: 7% */
 }
 
 .elo_graph{
-    /* border: rgb(73, 73, 73); */
-    /* border-style: solid; */
-    /* border-width: 1px;/ */
-
-    margin-left: 0;
-    /* margin-left: auto; */
-    /* margin-right: auto; */
-    /* width: fit-content; */
+    margin-left: auto;
     max-width: 40%;
 }
 
@@ -119,10 +92,8 @@
 }
 
 .ring-container {
-    /* size: 1.3em; */
     scale: 0.5;
     max-height: 1.3rem;
-    /* size: 1.3rem; */
     height: inherit;
     position: relative;
     display: flex;
