@@ -14,7 +14,7 @@ public partial class Ranks : IDisposable
     private bool _isLoading = true;
     public List<GetRankResponse> rankList = new();
 
-    public List<String> playerNames = new List<string>() { "shua/9731", "spit%20slurpin/2222", "Pepp/fishi", "ZeroTwo/2809", "ads/555", "VGB/444", "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house" };
+    public List<String> playerNames = new List<string>() { "shua/9731", "spit%20slurpin/2222", "Pepp/fishi", "ZeroTwo/2809", "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house" };
 
     public DateTime lastUpdated = DateTime.MinValue;
     private string timeSinceLastUpdated = "";
@@ -140,7 +140,7 @@ public partial class Ranks : IDisposable
         var collection = database.GetCollection<CustomDate>("time_updated");
         var currentTime = DateTime.Now;
 
-        var filter = Builders<CustomDate>.Filter.Eq(r => r.dataType, "rank"); //match rank date type
+        var filter = Builders<CustomDate>.Filter.Eq(r => r.dataType, "rank_test"); //match rank date type
         var update = Builders<CustomDate>.Update.Set(r => r.dateBinary, currentTime.ToBinary());
         await collection.UpdateOneAsync(filter, update);
         update = Builders<CustomDate>.Update.Set(r => r.dateString, currentTime.ToString());

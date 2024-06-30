@@ -45,14 +45,6 @@
             @* PLACEHOLDER MATCHES LINK *@
             @* var link = $"/matches/{player.Data.Puuid.ToString()}"; *@
             suffix = "";
-            @if (player.Data.Name == "ads")
-            {
-                suffix = " (Perez)";
-            }
-            @if (player.Data.Name == "VGB")
-            {
-                suffix = " (Augdog)";
-            }
             <div class="player">
                 <a class="player_name" target="blank" href=@link>
                     @(player.Data.Name + @suffix)
