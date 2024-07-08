@@ -140,7 +140,7 @@ public partial class Ranks : IDisposable
         var collection = database.GetCollection<CustomDate>("time_updated");
         var currentTime = DateTime.Now;
 
-        var filter = Builders<CustomDate>.Filter.Eq(r => r.dataType, "rank_test"); //match rank date type
+        var filter = Builders<CustomDate>.Filter.Eq(r => r.dataType, "rank"); //match rank date type
         var update = Builders<CustomDate>.Update.Set(r => r.dateBinary, currentTime.ToBinary());
         await collection.UpdateOneAsync(filter, update);
         update = Builders<CustomDate>.Update.Set(r => r.dateString, currentTime.ToString());
@@ -172,7 +172,7 @@ public partial class Ranks : IDisposable
         {
             var json = await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v2/mmr/na/{player}");
             GetRankResponse? rank = GetRankResponse.FromJson(json);
-
+            
             var mmr = MMRHistoryResponse.FromJson(await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v1/lifetime/mmr-history/na/{player}?size=20"));
             var extracted = new MMRWrapper(mmr.Data.Select(d => new MMRHistory(d.Date.ToUnixTimeSeconds(), d.Elo)).ToArray());
             rank.Data.MMR = extracted;
