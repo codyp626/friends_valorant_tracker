@@ -109,10 +109,13 @@ namespace FriendsTracker.Components.Infrastructure
 
         public int Elo { get; set; }
 
-        public MMRHistory(long DateOffset, int Elo)
+        public string SeasonName { get; set; }
+ 
+        public MMRHistory(long DateOffset, int Elo, string SeasonName)
         {
             this.Elo = Elo;
             this.DateOffset = DateOffset;
+            this.SeasonName = SeasonName;
         }
 
     }
