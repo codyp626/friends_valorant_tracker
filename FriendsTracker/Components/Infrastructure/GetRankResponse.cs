@@ -23,7 +23,7 @@ public partial class GetRankResponse
 public partial class Rank
 {
     [JsonProperty("MMR")]
-    public MMRWrapper MMR { get; set; } = null!;
+    public MMRHistoryResponse MMR { get; set; } = null!;
 
     [BsonElement ("MatchHistory")]
     [JsonProperty("MatchHistory")]
@@ -39,7 +39,7 @@ public partial class Rank
 
     [BsonElement ("puuid")]
     [JsonProperty("puuid")]
-    public Guid Puuid { get; set; }
+    public string? Puuid { get; set; }
 
     [BsonElement ("current_data")]
     [JsonProperty("current_data")]

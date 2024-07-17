@@ -6,6 +6,7 @@ using Microsoft.JSInterop;
 using MongoDB.Driver.Linq;
 using System.Threading;
 using System.Diagnostics.Contracts;
+using System.ComponentModel.Design;
 
 namespace FriendsTracker.Components.Pages;
 
@@ -14,12 +15,25 @@ public partial class Ranks : IDisposable
     private bool _isLoading = true;
     public List<GetRankResponse> rankList = new();
 
-    public List<String> playerNames = new List<string>() { "shua/9731", "spit%20slurpin/2222", "Pepp/fishi", "ZeroTwo/2809", "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house" };
+    public List<String> playerNames = new List<string>() 
+    { 
+        "shua/9731", 
+        "spit%20slurpin/2222", 
+        "Pepp/fishi", 
+        "ZeroTwo/2809", 
+        "Jsav16/9925", 
+        "cadennedac/na1", 
+        "augdog922/2884", 
+        "mingemuncher14/misa", 
+        "BootyConsumer/376", 
+        "Brewt/0000", 
+        "Stroup22/na1", 
+        "WildKevDog/house" 
+    };
 
     public DateTime lastUpdated = DateTime.MinValue;
     private string timeSinceLastUpdated = "";
     private System.Timers.Timer timer = null!;
-    private string suffix = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -41,14 +55,18 @@ public partial class Ranks : IDisposable
     private async Task displayGraphs()
     {
 
+
         foreach (var rank in rankList)
         {
             StateHasChanged();
-            // var eloArray = rank.Data.MMR.mmrArray.Where(d=> d.SeasonName == "e9a1").Select(d => d.Elo).Reverse().ToArray();
-            var eloArray = rank.Data.MMR.mmrArray.Select(d => d.Elo).Reverse().ToArray();
-            var dateArray = rank.Data.MMR.mmrArray.Select(d => d.DateOffset).Reverse().ToArray();
-            // var dateArray = rank.Data.MMR.mmrArray.Where(d=> d.SeasonName == "e9a1").Select(d => d.DateOffset).Reverse().ToArray();
-
+            if(rank.Data.MMR.Data == null)
+            {
+                Console.WriteLine("ERROR: eloArray or dateArray JS array is null");
+                return;
+            }
+            var eloArray =  rank.Data.MMR.Data.Where(d=> d.Elo != 0 && d.SeasonId == "52ca6698-41c1-e7de-4008-8994d2221209").Select(d => d.Elo).Reverse().ToArray();
+            var dateArray = rank.Data.MMR.Data.Where(d=> d.Elo != 0).Select(d => DateTimeOffset.Parse(d.Date).ToUnixTimeSeconds()).Reverse().ToArray();
+            
             await JSRuntime.InvokeVoidAsync("mmrChart", eloArray, dateArray, rank.Data.Puuid);
         }
     }
@@ -168,24 +186,27 @@ public partial class Ranks : IDisposable
 
         static async Task<GetRankResponse?> ProcessRepositoriesAsync(HttpClient client, string player)
         {
-                var json = await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v2/mmr/na/{player}");
-                GetRankResponse? rank = GetRankResponse.FromJson(json);
+            var json = await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v2/mmr/na/{player}");
+            GetRankResponse? rank = GetRankResponse.FromJson(json);
+            if (rank == null)
+            {
+                Console.WriteLine("rank is null");
+                return null;
+            }
 
-                var mmr = MMRHistoryResponse.FromJson(await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v1/lifetime/mmr-history/na/{player}?size=20"));
 
-                //                                                                                                                                     UPDATE NEW SEASON HERE
-                //                                                                                                                                                  vv
-                var extracted = new MMRWrapper(mmr.Data.Select(d => new MMRHistory(d.Date.ToUnixTimeSeconds(), d.Elo, d.Season.Short)).Where(d => d.SeasonName == "e9a1").ToArray());
-                rank.Data.MMR = extracted;
-                return rank;
+            var mmr_json = await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v1/mmr-history/na/{player}?size=200");
             
-            
+            var mmr = MMRHistoryResponse.FromJson(mmr_json);
 
+            if (mmr == null)
+            {
+                Console.WriteLine("mmr is null");
+                return null;
+            }
 
-            //this will kinda make page load times abysmal :((((
-            // var matches = MatchResponse.FromJson(await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v1/lifetime/mmr-history/na/{player}?size=10"));
-            // Console.WriteLine($"got matches for {matches.Data.First().Players.AllPlayers.First()}");
-            // rank.Data.MatchHistory = matches;
+            rank.Data.MMR = mmr;
+            return rank;
 
         }
 

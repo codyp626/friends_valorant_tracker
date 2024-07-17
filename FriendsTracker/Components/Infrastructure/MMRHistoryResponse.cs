@@ -14,111 +14,81 @@ namespace FriendsTracker.Components.Infrastructure
     public partial class MMRHistoryResponse
     {
         [BsonElement("status")]
-        public int? Status { get; set; }
+		[JsonProperty("status")]
+        public int Status { get; set; }
 
         [BsonElement("name")]
+		[JsonProperty("name")]
         public string? Name { get; set; }
 
         [BsonElement("tag")]
+		[JsonProperty("tag")]
         public string? Tag { get; set; }
 
-        [BsonElement("results")]
-        public Results? Results { get; set; }
-
         [BsonElement("data")]
+		[JsonProperty("data")]
         public Datum[]? Data { get; set; }
     }
 
     public partial class Datum
     {
+        [BsonElement("currenttier")]
+		[JsonProperty("currenttier")]
+        public int Currenttier { get; set; }
+
+        [BsonElement("currenttierpatched")]
+		[JsonProperty("currenttierpatched")]
+        public string? Currenttierpatched { get; set; }
+
+        [BsonElement("images")]
+		[JsonProperty("images")]
+        public Images? Images { get; set; }
+
         [BsonElement("match_id")]
+		[JsonProperty("match_id")]
         public string? MatchId { get; set; }
 
-        [BsonElement("tier")]
-        public Tier? Tier { get; set; }
-
         [BsonElement("map")]
+		[JsonProperty("map")]
         public Map? Map { get; set; }
 
-        [BsonElement("season")]
-        public Season? Season { get; set; }
+        [BsonElement("season_id")]
+		[JsonProperty("season_id")]
+        public string? SeasonId { get; set; }
 
         [BsonElement("ranking_in_tier")]
-        public int? RankingInTier { get; set; }
+		[JsonProperty("ranking_in_tier")]
+        public int RankingInTier { get; set; }
 
-        [BsonElement("last_mmr_change")]
-        public int? LastMmrChange { get; set; }
+        [BsonElement("mmr_change_to_last_game")]
+		[JsonProperty("mmr_change_to_last_game")]
+        public int MmrChangeToLastGame { get; set; }
 
         [BsonElement("elo")]
+		[JsonProperty("elo")]
         public int Elo { get; set; }
 
         [BsonElement("date")]
-        public DateTimeOffset Date { get; set; }
+		[JsonProperty("date")]
+        public string? Date { get; set; }
+
+        [BsonElement("date_raw")]
+		[JsonProperty("date_raw")]
+        public int DateRaw { get; set; }
     }
 
-    [BsonIgnoreExtraElements]
+
     public partial class Map
     {
+        [BsonElement("id")]
+		[JsonProperty("id")]
+        public string? Id { get; set; }
+
         [BsonElement("name")]
+		[JsonProperty("name")]
         public string? Name { get; set; }
     }
     
-    [BsonIgnoreExtraElements]
-    public partial class Season
-    {
-        [BsonElement("short")]
-        public string? Short { get; set; }
-    }
-
-    [BsonIgnoreExtraElements]
-    public partial class Tier
-    {
-        [BsonElement("name")]
-        public string? Name { get; set; }
-    }
-
-    public partial class Results
-    {
-        [BsonElement("total")]
-        public int? Total { get; set; }
-
-        [BsonElement("returned")]
-        public int? Returned { get; set; }
-
-        [BsonElement("before")]
-        public int? Before { get; set; }
-
-        [BsonElement("after")]
-        public int? After { get; set; }
-    }
-
-    public partial class MMRWrapper
-    {
-        public MMRHistory[]? mmrArray { get; set; }
-
-        public MMRWrapper(MMRHistory[] mmrArray)
-        {
-            this.mmrArray = mmrArray;
-        }
-        
-    }
-
-    public partial class MMRHistory
-    {
-        public long DateOffset { get; set; }
-
-        public int Elo { get; set; }
-
-        public string SeasonName { get; set; }
- 
-        public MMRHistory(long DateOffset, int Elo, string SeasonName)
-        {
-            this.Elo = Elo;
-            this.DateOffset = DateOffset;
-            this.SeasonName = SeasonName;
-        }
-
-    }
 
     public partial class MMRHistoryResponse
     {

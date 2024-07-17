@@ -6,6 +6,10 @@ using Newtonsoft.Json.Converters;
 
 namespace FriendsTracker.Components.Infrastructure;
 
+
+
+
+//UNUSED AT THE MOMENT
 [BsonIgnoreExtraElements]
 public partial class MatchResponse
 {
