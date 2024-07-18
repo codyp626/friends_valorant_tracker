@@ -1,6 +1,7 @@
 ﻿@page "/rank"
 @inject IJSRuntime JSRuntime
 
+
 @using System.Net.Http.Json;
 @using System.Text.Json;
 @using Microsoft.AspNetCore.Mvc
@@ -44,10 +45,9 @@
             var link = $"https://tracker.gg/valorant/profile/riot/{@player.Data.Name}%23{@player.Data.Tag}/overview";
             @* PLACEHOLDER MATCHES LINK *@
             @* var link = $"/matches/{player.Data.Puuid.ToString()}"; *@
-            suffix = "";
             <div class="player">
                 <a class="player_name" target="blank" href=@link>
-                    @(player.Data.Name + @suffix)
+                    @(player.Data.Name)
                 </a>
                 <div class="elo_graph" id="@player.Data.Puuid"></div>
 

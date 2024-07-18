@@ -4,8 +4,6 @@ using FriendsTracker.Components.Infrastructure;
 using System.Net.Http.Headers;
 using Microsoft.JSInterop;
 using MongoDB.Driver.Linq;
-using System.Threading;
-using System.Diagnostics.Contracts;
 
 namespace FriendsTracker.Components.Pages;
 
@@ -14,12 +12,25 @@ public partial class Ranks : IDisposable
     private bool _isLoading = true;
     public List<GetRankResponse> rankList = new();
 
-    public List<String> playerNames = new List<string>() { "shua/9731", "spit%20slurpin/2222", "Pepp/fishi", "ZeroTwo/2809", "Jsav16/9925", "cadennedac/na1", "augdog922/2884", "mingemuncher14/misa", "BootyConsumer/376", "Brewt/0000", "Stroup22/na1", "WildKevDog/house" };
+    public List<String> playerNames = new List<string>() 
+    { 
+        "shua/9731", 
+        "spit%20slurpin/2222", 
+        "Pepp/fishi", 
+        "ZeroTwo/2809", 
+        "Jsav16/9925", 
+        "cadennedac/na1", 
+        "augdog922/2884", 
+        "mingemuncher14/misa", 
+        "BootyConsumer/376", 
+        "Brewt/0000", 
+        "Stroup22/na1", 
+        "WildKevDog/house" 
+    };
 
     public DateTime lastUpdated = DateTime.MinValue;
     private string timeSinceLastUpdated = "";
     private System.Timers.Timer timer = null!;
-    private string suffix = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -41,14 +52,18 @@ public partial class Ranks : IDisposable
     private async Task displayGraphs()
     {
 
+
         foreach (var rank in rankList)
         {
             StateHasChanged();
-            // var eloArray = rank.Data.MMR.mmrArray.Where(d=> d.SeasonName == "e9a1").Select(d => d.Elo).Reverse().ToArray();
-            var eloArray = rank.Data.MMR.mmrArray.Select(d => d.Elo).Reverse().ToArray();
-            var dateArray = rank.Data.MMR.mmrArray.Select(d => d.DateOffset).Reverse().ToArray();
-            // var dateArray = rank.Data.MMR.mmrArray.Where(d=> d.SeasonName == "e9a1").Select(d => d.DateOffset).Reverse().ToArray();
-
+            if(rank.Data.MMR.Data == null)
+            {
+                Console.WriteLine("ERROR: eloArray or dateArray JS array is null");
+                return;
+            }
+            var eloArray =  rank.Data.MMR.Data.Where(d=> d.Elo != 0 && d.SeasonId == "52ca6698-41c1-e7de-4008-8994d2221209").Select(d => d.Elo).Reverse().ToArray();
+            var dateArray = rank.Data.MMR.Data.Where(d=> d.Elo != 0).Select(d => DateTimeOffset.Parse(d.Date).ToUnixTimeSeconds()).Reverse().ToArray();
+            
             await JSRuntime.InvokeVoidAsync("mmrChart", eloArray, dateArray, rank.Data.Puuid);
         }
     }
@@ -151,7 +166,22 @@ public partial class Ranks : IDisposable
         var database = GetDatabase("player_data_db");
         await updateTimeAsync(database);
         var collection = database.GetCollection<GetRankResponse>("rank_test");
-        var updatedRanks = await getPlayerRanksHTTPAsync();
+
+
+
+        List<string> rank_urls = new List<string>();
+        foreach(var player in playerNames)
+        {
+            rank_urls.Add($"https://api.henrikdev.xyz/valorant/v2/mmr/na/{player}");
+        }
+
+        List<string> mmr_urls = new List<string>();
+        foreach(var player in playerNames)
+        {
+            mmr_urls.Add($"https://api.henrikdev.xyz/valorant/v1/mmr-history/na/{player}");
+        }
+
+        var updatedRanks = await GetPlayerRanksHTTPAsync(mmr_urls, rank_urls);
         foreach (GetRankResponse player in updatedRanks)
         {
             //this filter should be puuid in the future
@@ -162,43 +192,35 @@ public partial class Ranks : IDisposable
         await OnInitializedAsync();
     }
 
-    public async Task<List<GetRankResponse>> getPlayerRanksHTTPAsync()
+    public async Task<List<GetRankResponse>> GetPlayerRanksHTTPAsync(List<string> mmr_urls, List<string> rank_urls)
     {
+        Console.WriteLine("getting ranks...");
+        
         var ranks = new List<GetRankResponse>();
 
-        static async Task<GetRankResponse?> ProcessRepositoriesAsync(HttpClient client, string player)
+        var client = new HttpClient();
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.DefaultRequestHeaders.Add("Authorization", Program.henrik_API_Key);
+        
+        var mmr_requests = mmr_urls.Select(url => client.GetStringAsync(url)).ToList();
+        await Task.WhenAll(mmr_requests);
+
+        var rank_requests = rank_urls.Select(url => client.GetStringAsync(url)).ToList();
+        await Task.WhenAll(rank_requests);
+
+        var mmr_responses = mmr_requests.Select(task => MMRHistoryResponse.FromJson(task.Result)).ToList();
+        var rank_responses = rank_requests.Select(task => GetRankResponse.FromJson(task.Result)).ToList();
+
+        var count = 0;
+        foreach (var rank in rank_responses)
         {
-                var json = await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v2/mmr/na/{player}");
-                GetRankResponse? rank = GetRankResponse.FromJson(json);
-
-                var mmr = MMRHistoryResponse.FromJson(await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v1/lifetime/mmr-history/na/{player}?size=20"));
-
-                //                                                                                                                                     UPDATE NEW SEASON HERE
-                //                                                                                                                                                  vv
-                var extracted = new MMRWrapper(mmr.Data.Select(d => new MMRHistory(d.Date.ToUnixTimeSeconds(), d.Elo, d.Season.Short)).Where(d => d.SeasonName == "e9a1").ToArray());
-                rank.Data.MMR = extracted;
-                return rank;
-            
-            
-
-
-            //this will kinda make page load times abysmal :((((
-            // var matches = MatchResponse.FromJson(await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v1/lifetime/mmr-history/na/{player}?size=10"));
-            // Console.WriteLine($"got matches for {matches.Data.First().Players.AllPlayers.First()}");
-            // rank.Data.MatchHistory = matches;
-
-        }
-
-        foreach (var player in playerNames)
-        {
-            Console.Write($"{player}'s rank ...\t ");
-            using HttpClient client = new();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("Authorization", Program.henrik_API_Key);
-            var rank = await ProcessRepositoriesAsync(client, player);
             if (rank is not null)
             {
+                // Console.WriteLine(rank.Data.CurrentData.Currenttierpatched);
+                rank.Data.MMR = mmr_responses[count];
+                Console.WriteLine($"{rank.Data.Name} \t {rank.Data.CurrentData.Currenttierpatched}");
+                
 
                 if (rank.Data.BySeason.E9A1.Error == "No data Available" || rank.Data.BySeason.E9A1.FinalRankPatched == "Unrated" || rank.Data.BySeason.E9A1.NumberOfGames == 0)
                 {
@@ -207,10 +229,52 @@ public partial class Ranks : IDisposable
                     rank.Data.CurrentData.Currenttierpatched = "Unrated";
                     rank.Data.CurrentData.Images.Small = new System.Uri("https://media.valorant-api.com/competitivetiers/564d8e28-c226-3180-6285-e48a390db8b1/0/smallicon.png");
                 }
-                Console.WriteLine(rank.Data.CurrentData.Currenttierpatched);
                 ranks.Add(rank);
             }
+            else{
+                Console.WriteLine("ERROR: rank is null");
+            }
+            count += 1;
         }
+
+        Console.WriteLine("got all ranks");
+        
+
         return ranks;
+
+        // static async Task<GetRankResponse?> ProcessRepositoriesAsync(HttpClient client, string player)
+        // {
+        //     GetRankResponse? rank = GetRankResponse.FromJson(await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v2/mmr/na/{player}"));
+        //     if (rank == null)
+        //     {
+        //         Console.WriteLine("rank is null");
+        //         return null;
+        //     }
+            
+        //     var mmr = MMRHistoryResponse.FromJson(await client.GetStringAsync($"https://api.henrikdev.xyz/valorant/v1/mmr-history/na/{player}"));
+
+        //     if (mmr == null)
+        //     {
+        //         Console.WriteLine("mmr is null");
+        //         return null;
+        //     }
+
+        //     rank.Data.MMR = mmr;
+
+        //     return rank;
+
+        // }
+
+
+
+        // foreach (var player in playerNames)
+        // playerNames.ForEach(async (player) => 
+        // {
+        //     // Console.Write($"{player}'s rank ...\t ");
+        //     using HttpClient client = new();
+
+        //     var rank = await ProcessRepositoriesAsync(client, player);
+
+        // });
     }
 }
