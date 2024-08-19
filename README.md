@@ -149,7 +149,7 @@ var players = new List<string>()
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] MongoDB Integration
+- [x] MongoDB Integration
     - [ ] Player KDA, HS%, Winrate
   - [ ] Damage Delta
 
