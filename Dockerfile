@@ -6,10 +6,10 @@ COPY . ./
 # Restore as distinct layers
 RUN dotnet restore
 # Build and publish a release
-RUN dotnet publish -c Release -o out
+RUN dotnet publish
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0@sha256:6c4df091e4e531bb93bdbfe7e7f0998e7ced344f54426b7e874116a3dc3233ff
-WORKDIR /FriendsTracker
-COPY --from=build-env /FriendsTracker/out .
-ENTRYPOINT ["dotnet", "DotNet.Docker.dll"]
+# FROM mcr.microsoft.com/dotnet/aspnet:8.0@sha256:6c4df091e4e531bb93bdbfe7e7f0998e7ced344f54426b7e874116a3dc3233ff
+# WORKDIR /FriendsTracker
+# COPY --from=build-env /FriendsTracker/out .
+# ENTRYPOINT ["dotnet", "DotNet.Docker.dll"]
