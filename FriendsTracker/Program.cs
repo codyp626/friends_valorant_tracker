@@ -22,7 +22,7 @@ string[] lines = File.ReadAllLines("../../secrets.txt");
 mongoKey = lines[0];
 henrik_API_Key = lines[1];
 }
-// catch(FileNotFoundException)
+// catch
 // {
 // mongoKey = builder.Configuration["Apps:MongoDBPassword"];
 // henrik_API_Key = builder.Configuration["Apps:HenrikAPI"];
@@ -30,6 +30,8 @@ henrik_API_Key = lines[1];
 // }
 catch
 {
+Console.WriteLine("trying Docker ENVS");
+
 mongoKey = Environment.GetEnvironmentVariable("MONGO");
 henrik_API_Key = Environment.GetEnvironmentVariable("HENRIK");
 }
