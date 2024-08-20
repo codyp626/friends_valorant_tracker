@@ -182,7 +182,7 @@
 
 .slidecontainer {
     width: 30%; /* Width of the outside container */
-    padding-left: 5%;
+    padding-left: 10px;
     padding-right: 10px;
   }
   
