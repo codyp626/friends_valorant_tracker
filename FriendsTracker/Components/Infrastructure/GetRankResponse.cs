@@ -15,19 +15,12 @@ public partial class GetRankResponse
     [BsonElement ("data")]
     [JsonProperty("data")]
     public Rank Data { get; set; } = null!;
-
-    //trying without a setter to see
-    // public DateTime Date { get; set;} = DateTime.MinValue;
 }
 
 public partial class Rank
 {
     [JsonProperty("MMR")]
     public MMRHistoryResponse MMR { get; set; } = null!;
-
-    [BsonElement ("MatchHistory")]
-    [JsonProperty("MatchHistory")]
-    public MatchResponse MatchHistory { get; set; } = null!;
 
     [BsonElement ("name")]
     [JsonProperty("name")]

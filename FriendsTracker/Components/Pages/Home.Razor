@@ -5,7 +5,6 @@
 
 
 <p style="font-family: consolas">checkout the valorant ranked page!</p>
-<p style="font-family: consolas">This is a test of the CI/CD!!!</p>
 
 <button class="btn btn-primary" @onclick="GotoRank" >Go to Rank Page</button>
 
@@ -13,10 +12,6 @@
     [Inject]
     private NavigationManager NavigationManager { get; set; } = null!;
 
-    @* private void GotoMongo()
-    {
-        NavigationManager.NavigateTo("/mongo");
-    } *@
     private void GotoRank()
     {
         NavigationManager.NavigateTo("/rank");
