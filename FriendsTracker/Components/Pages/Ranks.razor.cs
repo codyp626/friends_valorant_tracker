@@ -26,7 +26,8 @@ public partial class Ranks : IDisposable
         "BootyConsumer/376", 
         "Brewt/0000", 
         "Stroup22/na1", 
-        "Validation/hater" 
+        "Validation/hater",
+        "SingingGF/Music" 
     ];
 
     public DateTime lastUpdated = DateTime.MinValue;
