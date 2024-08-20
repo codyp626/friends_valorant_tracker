@@ -10,7 +10,7 @@ namespace FriendsTracker.Components.Infrastructure
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 
-    [BsonIgnoreExtraElements]
+    // [BsonIgnoreExtraElements]
     public partial class MMRHistoryResponse
     {
         [BsonElement("status")]
@@ -25,25 +25,39 @@ namespace FriendsTracker.Components.Infrastructure
 		[JsonProperty("tag")]
         public string? Tag { get; set; }
 
+        [BsonElement("results")]
+		[JsonProperty("results")]
+        public Results? Results { get; set; }
+
         [BsonElement("data")]
 		[JsonProperty("data")]
         public Datum[]? Data { get; set; }
+
+
     }
 
+    public partial class Results
+    {
+        [BsonElement("total")]
+		[JsonProperty("total")]
+        public int? Total { get; set; }
+
+        [BsonElement("returned")]
+		[JsonProperty("returned")]
+        public int? Returned { get; set; }
+
+        [BsonElement("before")]
+		[JsonProperty("before")]
+        public int? Before { get; set; }
+
+        [BsonElement("after")]
+		[JsonProperty("after")]
+        public int? After { get; set; }
+    }
+
+    // [BsonIgnoreExtraElements]
     public partial class Datum
     {
-        [BsonElement("currenttier")]
-		[JsonProperty("currenttier")]
-        public int Currenttier { get; set; }
-
-        [BsonElement("currenttierpatched")]
-		[JsonProperty("currenttierpatched")]
-        public string? Currenttierpatched { get; set; }
-
-        [BsonElement("images")]
-		[JsonProperty("images")]
-        public Images? Images { get; set; }
-
         [BsonElement("match_id")]
 		[JsonProperty("match_id")]
         public string? MatchId { get; set; }
@@ -52,16 +66,16 @@ namespace FriendsTracker.Components.Infrastructure
 		[JsonProperty("map")]
         public Map? Map { get; set; }
 
-        [BsonElement("season_id")]
-		[JsonProperty("season_id")]
-        public string? SeasonId { get; set; }
+        [BsonElement("season")]
+		[JsonProperty("season")]
+        public Season Season { get; set; } = new Season();
 
         [BsonElement("ranking_in_tier")]
 		[JsonProperty("ranking_in_tier")]
         public int RankingInTier { get; set; }
 
-        [BsonElement("mmr_change_to_last_game")]
-		[JsonProperty("mmr_change_to_last_game")]
+        [BsonElement("last_mmr_change")]
+		[JsonProperty("last_mmr_change")]
         public int MmrChangeToLastGame { get; set; }
 
         [BsonElement("elo")]
@@ -70,15 +84,33 @@ namespace FriendsTracker.Components.Infrastructure
 
         [BsonElement("date")]
 		[JsonProperty("date")]
-        public string? Date { get; set; }
-
-        [BsonElement("date_raw")]
-		[JsonProperty("date_raw")]
-        public int DateRaw { get; set; }
+        public string Date { get; set; } = "never";
     }
 
 
     public partial class Map
+    {
+        [BsonElement("id")]
+		[JsonProperty("id")]
+        public string? Id { get; set; }
+
+        [BsonElement("name")]
+		[JsonProperty("name")]
+        public string? Name { get; set; }
+    }
+
+    public partial class Season
+    {
+        [BsonElement("id")]
+		[JsonProperty("id")]
+        public string Id { get; set; } = "1";
+
+        [BsonElement("short")]
+		[JsonProperty("short")]
+        public string Name { get; set; } = "default";
+    }
+
+    public partial class Tier
     {
         [BsonElement("id")]
 		[JsonProperty("id")]

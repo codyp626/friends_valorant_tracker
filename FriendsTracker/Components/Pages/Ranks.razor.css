@@ -178,3 +178,24 @@
 .highcharts-data-table tr:hover {
     background: #ee04da;
 }
+
+
+.slidecontainer {
+    width: 30%; /* Width of the outside container */
+    padding-left: 5%;
+    padding-right: 10px;
+  }
+  
+  /* The slider itself */
+  .slider {
+    width: 100%; /* Full-width */
+    height: 25px; /* Specified height */
+    background: #d3d3d3; /* Grey background */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    transition: opacity .2s;
+  }
+  
+  /* Mouse-over effects */
+  .slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+  }

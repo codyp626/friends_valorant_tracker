@@ -15,9 +15,10 @@
     height: min-content;
     align-items: center;">
     <button class="btn btn-primary" @onclick="@updateMongoRanksAsync">Force Update</button>
-        <p style="margin-bottom: 0; padding-left: 5px; display: inline; color:rgb(167, 167, 167); font-family: Rajdhani; font-weight: 700; font-size: 1.3em">
-            Updated:
-        </p>
+    <p
+        style="margin-bottom: 0; padding-left: 5px; display: inline; color:rgb(167, 167, 167); font-family: Rajdhani; font-weight: 700; font-size: 1.3em">
+        Updated:
+    </p>
     @if (_isLoading)
     {
         <div class="ring-container">
@@ -31,10 +32,31 @@
     }
     else
     {
-        <span style="margin-bottom: 0; padding-left: 5px; display: inline; color:rgb(167, 167, 167); font-family: Rajdhani; font-weight: 600; font-size: 1.3em">
+        <span
+            style="margin-bottom: 0; padding-left: 5px; display: inline; color:rgb(167, 167, 167); font-family: Rajdhani; font-weight: 600; font-size: 1.3em">
             @timeSinceLastUpdated
         </span>
     }
+    <div class="slidecontainer">
+        <input type="range" min="1" max="100" value="50" class="slider" id="slider">
+    </div>
+    <p id="demo"></p>
+    <p>&nbsp; games</p>
+
+    <script>
+        var slider = document.getElementById("slider");
+        var output = document.getElementById("demo");
+        output.innerHTML = slider.value; // Display the default slider value
+
+        slider.oninput = function() {
+            output.innerHTML = this.value;
+        }
+
+    </script>
+
+
+
+
 </div>
 
 <div class="card_container">
