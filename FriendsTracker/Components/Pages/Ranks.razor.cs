@@ -8,8 +8,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FriendsTracker.Components.Pages;
 
+
 public partial class Ranks : IDisposable
 {
+    public string currentSeasonId = "292f58db-4c17-89a7-b1c0-ba988f0e9d98";
     private bool _isLoading = true;
     public List<GetRankResponse> rankList = [];
 
@@ -26,8 +28,7 @@ public partial class Ranks : IDisposable
         "BootyConsumer/376", 
         "Brewt/0000", 
         "Stroup22/na1", 
-        "Validation/hater",
-        "SingingGF/Music" 
+        "Validation/hater"
     ];
 
     public DateTime lastUpdated = DateTime.MinValue;
@@ -61,7 +62,7 @@ public partial class Ranks : IDisposable
                 Console.WriteLine("ERROR: eloArray or dateArray JS array is null");
                 return;
             }
-            var eloArray =  rank.Data.MMR.Data.Where(d=> d.Elo != 0 && d.Season.Id == "52ca6698-41c1-e7de-4008-8994d2221209").Select(d => d.Elo).Reverse().ToArray();
+            var eloArray =  rank.Data.MMR.Data.Where(d=> d.Elo != 0 && d.Season.Id == currentSeasonId).Select(d => d.Elo).Reverse().ToArray();
             var dateArray = rank.Data.MMR.Data.Where(d=> d.Elo != 0).Select(d => DateTimeOffset.Parse(d.Date).ToUnixTimeSeconds()).Reverse().ToArray();
             
             eloArray = (eloArray.Length > amount)
@@ -107,16 +108,6 @@ public partial class Ranks : IDisposable
         }
         return $"{(int)timeSpan.TotalSeconds} seconds ago";
     }
-
-    // public void buttonFunc()
-    // {
-    //     _isLoading = true;
-
-    //     Console.WriteLine("loading...");
-    //     StateHasChanged();
-    //     Thread.Sleep(5);
-    //     // _isLoading = false;
-    // }
 
     public void Dispose()
     {
@@ -211,26 +202,37 @@ public partial class Ranks : IDisposable
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         client.DefaultRequestHeaders.Add("Authorization", Program.henrik_API_Key);
         
-        var mmr_requests = mmr_urls.Select(url => client.GetStringAsync(url)).ToList();
+        var mmr_requests = mmr_urls.Select(client.GetStringAsync).ToList();
         await Task.WhenAll(mmr_requests);
 
-        var rank_requests = rank_urls.Select(url => client.GetStringAsync(url)).ToList();
+        var rank_requests = rank_urls.Select(client.GetStringAsync).ToList();
         await Task.WhenAll(rank_requests);
 
         var mmr_responses = mmr_requests.Select(task => MMRHistoryResponse.FromJson(task.Result)).ToList();
         var rank_responses = rank_requests.Select(task => GetRankResponse.FromJson(task.Result)).ToList();
 
         var count = 0;
+        
+        foreach (var mmr in mmr_responses)
+        {
+                if (mmr.Data != null)
+                {
+                    // Filter Datum array for the correct Season.Id
+                    var filteredData = mmr.Data.Where(d => d.Season.Id == currentSeasonId).ToArray();
+
+                    // If no Datum matches the targetSeasonId, set Data to an empty array
+                    mmr.Data = filteredData.Any() ? filteredData : Array.Empty<Datum>();
+                }
+        }
+
         foreach (var rank in rank_responses)
         {
-            if (rank is not null)
+            if (rank is not null && mmr_responses[count] is not null)
             {
-                // Console.WriteLine(rank.Data.CurrentData.Currenttierpatched);
                 rank.Data.MMR = mmr_responses[count];
                 Console.WriteLine($"{rank.Data.Name} is {rank.Data.CurrentData.Currenttierpatched}");
                 
-
-                if (rank.Data.BySeason.E9A1.Error == "No data Available" || rank.Data.BySeason.E9A1.FinalRankPatched == "Unrated" || rank.Data.BySeason.E9A1.NumberOfGames == 0)
+                if (rank.Data.BySeason.E9A2.Error == "No data Available" || rank.Data.BySeason.E9A2.FinalRankPatched == "Unrated" || rank.Data.BySeason.E9A2.NumberOfGames == 0)
                 {
                     rank.Data.CurrentData.Elo = 0;
                     rank.Data.CurrentData.RankingInTier = 0;
@@ -240,17 +242,13 @@ public partial class Ranks : IDisposable
                 ranks.Add(rank);
             }
             else{
-                Console.WriteLine("ERROR: rank is null");
+                Console.WriteLine("ERROR: rank or MMR is null");
             }
             count += 1;
         }
 
         Console.WriteLine("got all ranks");
         
-        
-
-
-
         return ranks;
     }
 }
