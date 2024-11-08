@@ -232,7 +232,7 @@ public partial class Ranks : IDisposable
                 rank.Data.MMR = mmr_responses[count];
                 Console.WriteLine($"{rank.Data.Name} is {rank.Data.CurrentData.Currenttierpatched}");
                 
-                if (rank.Data.BySeason.E9A2.Error == "No data Available" || rank.Data.BySeason.E9A2.FinalRankPatched == "Unrated" || rank.Data.BySeason.E9A2.NumberOfGames == 0)
+                if (rank.Data.BySeason.E9A3.Error == "No data Available" || rank.Data.BySeason.E9A3.FinalRankPatched == "Unrated" || rank.Data.BySeason.E9A3.NumberOfGames == 0)
                 {
                     rank.Data.CurrentData.Elo = 0;
                     rank.Data.CurrentData.RankingInTier = 0;
