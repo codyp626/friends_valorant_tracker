@@ -11,7 +11,7 @@ namespace FriendsTracker.Components.Pages;
 
 public partial class Ranks : IDisposable
 {
-    public string currentSeasonId = "292f58db-4c17-89a7-b1c0-ba988f0e9d98";
+    public string currentSeasonId = "dcde7346-4085-de4f-c463-2489ed47983b";
     private bool _isLoading = true;
     public List<GetRankResponse> rankList = [];
 
