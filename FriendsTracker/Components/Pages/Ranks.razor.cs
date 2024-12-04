@@ -26,7 +26,8 @@ public partial class Ranks : IDisposable
         "augdog922/2884", 
         "mingemuncher14/misa", 
         "BootyConsumer/376", 
-        "Brewt/0000", 
+        // "Brewt/0000", 
+        "mr%20wolf/teror",
         "Stroup22/na1", 
         "Validation/hater"
     ];
