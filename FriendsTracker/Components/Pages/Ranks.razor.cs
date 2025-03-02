@@ -11,7 +11,7 @@ namespace FriendsTracker.Components.Pages;
 
 public partial class Ranks : IDisposable
 {
-    public string currentSeasonId = "dcde7346-4085-de4f-c463-2489ed47983b";
+    public string currentSeasonId = "476b0893-4c2e-abd6-c5fe-708facff0772";
     private bool _isLoading = true;
     public List<GetRankResponse> rankList = [];
 
@@ -233,7 +233,7 @@ public partial class Ranks : IDisposable
                 rank.Data.MMR = mmr_responses[count];
                 Console.WriteLine($"{rank.Data.Name} is {rank.Data.CurrentData.Currenttierpatched}");
                 
-                if (rank.Data.BySeason.E9A3.Error == "No data Available" || rank.Data.BySeason.E9A3.FinalRankPatched == "Unrated" || rank.Data.BySeason.E9A3.NumberOfGames == 0)
+                if (rank.Data.BySeason.E10A1.Error == "No data Available" || rank.Data.BySeason.E10A1.FinalRankPatched == "Unrated" || rank.Data.BySeason.E10A1.NumberOfGames == 0)
                 {
                     rank.Data.CurrentData.Elo = 0;
                     rank.Data.CurrentData.RankingInTier = 0;

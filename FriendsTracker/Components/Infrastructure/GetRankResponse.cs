@@ -157,6 +157,18 @@ public partial class BySeason
     [BsonElement ("e9a3")]
     [JsonProperty("e9a3")]
     public ACT_STATS E9A3 { get; set; } = null!;
+
+    [BsonElement ("e10a1")]
+    [JsonProperty("e10a1")]
+    public ACT_STATS E10A1 { get; set; } = null!;
+
+    [BsonElement ("e10a2")]
+    [JsonProperty("e10a2")]
+    public ACT_STATS E10A2 { get; set; } = null!;
+
+    [BsonElement ("e10a3")]
+    [JsonProperty("e10a3")]
+    public ACT_STATS E10A3 { get; set; } = null!;
 }
 
 public partial class ACT_STATS
