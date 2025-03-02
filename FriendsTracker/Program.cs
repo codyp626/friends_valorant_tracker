@@ -35,7 +35,7 @@ mongoKey = Environment.GetEnvironmentVariable("MONGO");
 henrik_API_Key = Environment.GetEnvironmentVariable("HENRIK");
 }
 
-connectionString = $"mongodb+srv://brewt:{mongoKey}@cluster0.xpbkg6w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+connectionString = $"mongodb+srv://brewt:{mongoKey}@cluster0.xpbkg6w.mongodb.net/?authSource=admin&appName=Cluster0";
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
