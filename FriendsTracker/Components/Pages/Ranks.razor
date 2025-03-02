@@ -37,12 +37,13 @@
             @timeSinceLastUpdated
         </span>
     }
-    <div class="slidecontainer">
+
+    @* <div class="slidecontainer">
         <input type="range" min="1" max="100" value="50" class="slider" id="slider">
     </div>
     <p>showing up to&nbsp;</p>
     <p id="demo"></p>
-    <p>&nbsp; games</p>
+    <p>&nbsp; games</p> *@
 
     <script>
         var slider = document.getElementById("slider");
@@ -66,11 +67,17 @@
         @foreach (var player in rankList)
         {
             var link = $"https://tracker.gg/valorant/profile/riot/{@player.Data.Name}%23{@player.Data.Tag}/overview";
+            var displayName = player.Data.Name switch
+            {
+                "Validation" => "Kevin",
+                "mr wolf" => "Brewt",
+                _ => player.Data.Name
+            };
             @* PLACEHOLDER MATCHES LINK *@
             @* var link = $"/matches/{player.Data.Puuid.ToString()}"; *@
             <div class="player">
                 <a class="player_name" target="blank" href=@link>
-                    @(player.Data.Name)
+                    @(displayName)
                 </a>
                 <div class="elo_graph" id="@player.Data.Puuid"></div>
 
