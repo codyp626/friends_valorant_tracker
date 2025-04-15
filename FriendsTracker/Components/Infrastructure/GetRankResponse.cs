@@ -8,285 +8,168 @@ namespace FriendsTracker.Components.Infrastructure;
 [BsonIgnoreExtraElements]
 public partial class GetRankResponse
 {
-    [BsonElement ("status")]
+    [BsonElement("status")]
     [JsonProperty("status")]
     public long Status { get; set; }
 
-    [BsonElement ("data")]
+    [BsonElement("data")]
     [JsonProperty("data")]
-    public Rank Data { get; set; } = null!;
-}
+    public RankData Data { get; set; } = null!;
 
-public partial class Rank
-{
-    [JsonProperty("MMR")]
-    public MMRHistoryResponse MMR { get; set; } = null!;
+    public partial class RankData
+    {
+        [BsonElement("mmr")]
+        [JsonProperty("mmr")]
+        public MMRHistoryResponse MMR { get; set; } = null!;
 
-    [BsonElement ("name")]
-    [JsonProperty("name")]
-    public string Name { get; set; } = null!;
+        [BsonElement("account")]
+        [JsonProperty("account")]
+        public Account Account { get; set; } = null!;
 
-    [BsonElement ("tag")]
-    [JsonProperty("tag")]
-    public string Tag { get; set; } = null!;
+        [BsonElement("peak")]
+        [JsonProperty("peak")]
+        public Peak Peak { get; set; } = null!;
 
-    [BsonElement ("puuid")]
-    [JsonProperty("puuid")]
-    public string? Puuid { get; set; }
+        [BsonElement("current")]
+        [JsonProperty("current")]
+        public Current Current { get; set; } = null!;
 
-    [BsonElement ("current_data")]
-    [JsonProperty("current_data")]
-    public CurrentData CurrentData { get; set; } = null!;
+        [BsonElement("seasonal")]
+        [JsonProperty("seasonal", NullValueHandling = NullValueHandling.Ignore)]
+        public Seasonal[]? Seasonal { get; set; }
+    }
 
-    [BsonElement ("highest_rank")]
-    [JsonProperty("highest_rank")]
-    public HighestRank HighestRank { get; set; } = null!;
+    public partial class Account
+    {
+        [BsonElement("puuid")]
+        [JsonProperty("puuid")]
+        public string Puuid { get; set; } = null!;
 
-    [BsonElement ("by_season")]
-    [JsonProperty("by_season")]
-    public BySeason BySeason { get; set; } = null!;
-}
+        [BsonElement("name")]
+        [JsonProperty("name")]
+        public string Name { get; set; } = null!;
 
-[BsonIgnoreExtraElements]
-public partial class BySeason
-{
-    [BsonElement ("e1a1")]
-    [JsonProperty("e1a1")]
-    public ACT_STATS E1A1 { get; set; } = null!;
+        [BsonElement("tag")]
+        [JsonProperty("tag")]
+        public string Tag { get; set; } = null!;
+    }
 
-    [BsonElement ("e1a2")]
-    [JsonProperty("e1a2")]
-    public ACT_STATS E1A2 { get; set; } = null!;
+    public partial class Peak
+    {
+        [BsonElement("season")]
+        [JsonProperty("season")]
+        public Season Season { get; set; } = null!;
 
-    [BsonElement ("e1a3")]
-    [JsonProperty("e1a3")]
-    public ACT_STATS E1A3 { get; set; } = null!;
+        [BsonElement("ranking_schema")]
+        [JsonProperty("ranking_schema")]
+        public string RankingSchema { get; set; } = null!;
 
-    [BsonElement ("e2a1")]
-    [JsonProperty("e2a1")]
-    public ACT_STATS E2A1 { get; set; } = null!;
+        [BsonElement("tier")]
+        [JsonProperty("tier")]
+        public Tier Tier { get; set; } = null!;
+    }
 
-    [BsonElement ("e2a2")]
-    [JsonProperty("e2a2")]
-    public ACT_STATS E2A2 { get; set; } = null!;
+    public partial class Current
+    {
+        [BsonElement("tier")]
+        [JsonProperty("tier")]
+        public Tier Tier { get; set; } = null!;
 
-    [BsonElement ("e2a3")]
-    [JsonProperty("e2a3")]
-    public ACT_STATS E2A3 { get; set; } = null!;
+        [BsonElement("rr")]
+        [JsonProperty("rr")]
+        public long RR { get; set; }
 
-    [BsonElement ("e3a1")]
-    [JsonProperty("e3a1")]
-    public ACT_STATS E3A1 { get; set; } = null!;
+        [BsonElement("last_change")]
+        [JsonProperty("last_change")]
+        public long LastChange { get; set; }
 
-    [BsonElement ("e3a2")]
-    [JsonProperty("e3a2")]
-    public ACT_STATS E3A2 { get; set; } = null!;
+        [BsonElement("elo")]
+        [JsonProperty("elo")]
+        public long Elo { get; set; }
 
-    [BsonElement ("e3a3")]
-    [JsonProperty("e3a3")]
-    public ACT_STATS E3A3 { get; set; } = null!;
+        [BsonElement("games_needed_for_rating")]
+        [JsonProperty("games_needed_for_rating")]
+        public long GamesNeededForRating { get; set; }
 
-    [BsonElement ("e4a1")]
-    [JsonProperty("e4a1")]
-    public ACT_STATS E4A1 { get; set; } = null!;
+        [BsonElement("leaderboard_placement")]
+        [JsonProperty("leaderboard_placement")]
+        public LeaderboardPlacement LeaderboardPlacement { get; set; } = null!;
+    }
 
-    [BsonElement ("e4a2")]
-    [JsonProperty("e4a2")]
-    public ACT_STATS E4A2 { get; set; } = null!;
+    public partial class Seasonal
+    {
+        [BsonElement("season")]
+        [JsonProperty("season")]
+        public Season Season { get; set; } = null!;
 
-    [BsonElement ("e4a3")]
-    [JsonProperty("e4a3")]
-    public ACT_STATS E4A3 { get; set; } = null!;
+        [BsonElement("wins")]
+        [JsonProperty("wins")]
+        public long Wins { get; set; }
 
-    [BsonElement ("e5a1")]
-    [JsonProperty("e5a1")]
-    public ACT_STATS E5A1 { get; set; } = null!;
+        [BsonElement("games")]
+        [JsonProperty("games")]
+        public long Games { get; set; }
 
-    [BsonElement ("e5a2")]
-    [JsonProperty("e5a2")]
-    public ACT_STATS E5A2 { get; set; } = null!;
+        [BsonElement("end_tier")]
+        [JsonProperty("end_tier")]
+        public Tier EndTier { get; set; } = null!;
 
-    [BsonElement ("e5a3")]
-    [JsonProperty("e5a3")]
-    public ACT_STATS E5A3 { get; set; } = null!;
+        [BsonElement("ranking_schema")]
+        [JsonProperty("ranking_schema")]
+        public string RankingSchema { get; set; } = null!;
 
-    [BsonElement ("e6a1")]
-    [JsonProperty("e6a1")]
-    public ACT_STATS E6A1 { get; set; } = null!;
+        [BsonElement("leaderboard_placement")]
+        [JsonProperty("leaderboard_placement")]
+        public LeaderboardPlacement LeaderboardPlacement { get; set; } = null!;
 
-    [BsonElement ("e6a2")]
-    [JsonProperty("e6a2")]
-    public ACT_STATS E6A2 { get; set; } = null!;
+        [BsonElement("act_wins")]
+        [JsonProperty("act_wins")]
+        public ActWin[] ActWins { get; set; } = null!;
+    }
 
-    [BsonElement ("e6a3")]
-    [JsonProperty("e6a3")]
-    public ACT_STATS E6A3 { get; set; } = null!;
+    public partial class Season
+    {
+        [BsonElement("id")]
+        [JsonProperty("id")]
+        public string Id { get; set; } = null!;
 
-    [BsonElement ("e7a1")]
-    [JsonProperty("e7a1")]
-    public ACT_STATS E7A1 { get; set; } = null!;
+        [BsonElement("short")]
+        [JsonProperty("short")]
+        public string Short { get; set; } = null!;
+    }
 
-    [BsonElement ("e7a2")]
-    [JsonProperty("e7a2")]
-    public ACT_STATS E7A2 { get; set; } = null!;
+    public partial class Tier
+    {
+        [BsonElement("id")]
+        [JsonProperty("id")]
+        public long Id { get; set; }
 
-    [BsonElement ("e7a3")]
-    [JsonProperty("e7a3")]
-    public ACT_STATS E7A3 { get; set; } = null!;
+        [BsonElement("name")]
+        [JsonProperty("name")]
+        public string Name { get; set; } = null!;
+    }
 
-    [BsonElement ("e8a1")]
-    [JsonProperty("e8a1")]
-    public ACT_STATS E8A1 { get; set; } = null!;
+    public partial class LeaderboardPlacement
+    {
+        [BsonElement("rank")]
+        [JsonProperty("rank")]
+        public long Rank { get; set; }
 
-    [BsonElement ("e8a2")]
-    [JsonProperty("e8a2")]
-    public ACT_STATS E8A2 { get; set; } = null!;
+        [BsonElement("updated_at")]
+        [JsonProperty("updated_at")]
+        public DateTime UpdatedAt { get; set; }
+    }
 
-    [BsonElement ("e8a3")]
-    [JsonProperty("e8a3")]
-    public ACT_STATS E8A3 { get; set; } = null!;
+    public partial class ActWin
+    {
+        [BsonElement("id")]
+        [JsonProperty("id")]
+        public long Id { get; set; }
 
-    [BsonElement ("e9a1")]
-    [JsonProperty("e9a1")]
-    public ACT_STATS E9A1 { get; set; } = null!;
-
-    [BsonElement ("e9a2")]
-    [JsonProperty("e9a2")]
-    public ACT_STATS E9A2 { get; set; } = null!;
-
-    [BsonElement ("e9a3")]
-    [JsonProperty("e9a3")]
-    public ACT_STATS E9A3 { get; set; } = null!;
-
-    [BsonElement ("e10a1")]
-    [JsonProperty("e10a1")]
-    public ACT_STATS E10A1 { get; set; } = null!;
-
-    [BsonElement ("e10a2")]
-    [JsonProperty("e10a2")]
-    public ACT_STATS E10A2 { get; set; } = null!;
-
-    [BsonElement ("e10a3")]
-    [JsonProperty("e10a3")]
-    public ACT_STATS E10A3 { get; set; } = null!;
-}
-
-public partial class ACT_STATS
-{
-    [BsonElement ("error")]
-    [JsonProperty("error")]
-    public string Error { get; set; } = null!;
-}
-
-public partial class ACT_STATS //ACT STATS
-{
-    [BsonElement ("wins")]
-    [JsonProperty("wins")]
-    public long Wins { get; set; }
-
-    [BsonElement ("number_of_games")]
-    [JsonProperty("number_of_games")]
-    public long NumberOfGames { get; set; }
-
-    [BsonElement ("final_rank")]
-    [JsonProperty("final_rank")]
-    public long FinalRank { get; set; }
-
-    [BsonElement ("final_rank_patched")]
-    [JsonProperty("final_rank_patched")]
-    public string FinalRankPatched { get; set; } = null!;
-
-    [BsonElement ("act_rank_wins")]
-    [JsonProperty("act_rank_wins")]
-    public ActRankWin[] ActRankWins { get; set; } = null!;
-
-    [BsonElement ("old")]
-    [JsonProperty("old")]
-    public bool Old { get; set; }
-}
-
-public partial class ActRankWin
-{
-    [BsonElement ("patched_tier")]
-    [JsonProperty("patched_tier")]
-    public string PatchedTier { get; set; } = null!;
-
-    [BsonElement ("tier")]
-    [JsonProperty("tier")]
-    public long Tier { get; set; }
-}
-
-public partial class CurrentData
-{
-    [BsonElement ("currenttier")]
-    [JsonProperty("currenttier")]
-    public long Currenttier { get; set; }
-
-    [BsonElement ("currenttierpatched")]
-    [JsonProperty("currenttierpatched")]
-    public string Currenttierpatched { get; set; } = null!;
-
-    [BsonElement ("images")]
-    [JsonProperty("images")]
-    public Images Images { get; set; } = null!;
-
-    [BsonElement ("ranking_in_tier")]
-    [JsonProperty("ranking_in_tier")]
-    public long RankingInTier { get; set; }
-
-    [BsonElement ("mmr_change_to_last_game")]
-    [JsonProperty("mmr_change_to_last_game")]
-    public long MmrChangeToLastGame { get; set; }
-
-    [BsonElement ("elo")]
-    [JsonProperty("elo")]
-    public long Elo { get; set; }
-
-    [BsonElement ("games_needed_for_rating")]
-    [JsonProperty("games_needed_for_rating")]
-    public long GamesNeededForRating { get; set; }
-
-    [BsonElement ("old")]
-    [JsonProperty("old")]
-    public bool Old { get; set; }
-}
-
-public partial class Images
-{
-    [BsonElement ("small")]
-    [JsonProperty("small")]
-    public Uri Small { get; set; } = null!;
-
-    [BsonElement ("large")]
-    [JsonProperty("large")]
-    public Uri Large { get; set; } = null!;
-
-    [BsonElement ("triangle_down")]
-    [JsonProperty("triangle_down")]
-    public Uri TriangleDown { get; set; } = null!;
-
-    [BsonElement ("triangle_up")]
-    [JsonProperty("triangle_up")]
-    public Uri TriangleUp { get; set; } = null!;
-}
-
-public partial class HighestRank
-{
-    [BsonElement ("old")]
-    [JsonProperty("old")]
-    public bool Old { get; set; }
-
-    [BsonElement ("tier")]
-    [JsonProperty("tier")]
-    public long Tier { get; set; }
-
-    [BsonElement ("patched_tier")]
-    [JsonProperty("patched_tier")]
-    public string PatchedTier { get; set; } = null!;
-
-    [BsonElement ("season")]
-    [JsonProperty("season")]
-    public string Season { get; set; } = null!;
+        [BsonElement("name")]
+        [JsonProperty("name")]
+        public string Name { get; set; } = null!;
+    }
 }
 
 public partial class GetRankResponse

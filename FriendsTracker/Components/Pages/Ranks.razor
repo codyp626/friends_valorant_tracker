@@ -64,14 +64,16 @@
 <div class="card_container">
     <div class="card">
         @* Ranks *@
-        @foreach (var player in rankList)
+        @foreach (var player in rankList.Where(p => p.Data.Current.Tier.Name != "Unrated"))
         {
-            var link = $"https://tracker.gg/valorant/profile/riot/{@player.Data.Name}%23{@player.Data.Tag}/overview";
-            var displayName = player.Data.Name switch
+            var link = $"https://tracker.gg/valorant/profile/riot/{@player.Data.Account.Name}%23{@player.Data.Account.Tag}/overview";
+            var img_link = $"https://media.valorant-api.com/competitivetiers/03621f52-342b-cf4e-4f86-9350a49c6d04/{@player.Data.Current.Tier.Id}/smallicon.png";
+            var displayName = player.Data.Account.Name switch
             {
-                "Validation" => "Kevin",
+                "whiffingwilliam" => "Kevin",
                 "mr wolf" => "Brewt",
-                _ => player.Data.Name
+                "diane foxington" => "Julia <3",
+                _ => player.Data.Account.Name
             };
             @* PLACEHOLDER MATCHES LINK *@
             @* var link = $"/matches/{player.Data.Puuid.ToString()}"; *@
@@ -79,18 +81,11 @@
                 <a class="player_name" target="blank" href=@link>
                     @(displayName)
                 </a>
-                <div class="elo_graph" id="@player.Data.Puuid"></div>
-
-                <img class="rank_icon" src=@player.Data.CurrentData.Images.Small.ToString()>
-                <p class="rr_number">@player.Data.CurrentData.RankingInTier RR</p>
+                <div class="elo_graph" id="@player.Data.Account.Puuid"></div>
+                <img class="rank_icon" src=@img_link alt="Rank Icon" />
+                <p class="rr_number">@player.Data.Current.RR RR</p>
             </div>
         }
 
     </div>
-    @* <div class="card">
-    Card 2
-    </div> *@
-    @* <div class="card">
-    Card 3
-    </div> *@
 </div>
