@@ -160,6 +160,11 @@
             const rank = ranks[baseRankIndex];
             return `${rank} ${tier}: ${rr} rr`;
         }
+
+        function checkContainerExists(containerId) {
+            const container = document.getElementById(containerId);
+            return container !== null && container.offsetParent !== null;
+        }
     </script>
 </body>
 
