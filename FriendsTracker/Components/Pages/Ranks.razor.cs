@@ -30,7 +30,7 @@ public partial class Ranks : IDisposable
         // "Brewt/0000", 
         "mr%20wolf/teror",
         "Stroup22/na1", 
-        "whiffingwilliam/2013",
+        "magisa/solo",
         "Validation/hater",
         "diane%20foxington/brewt",
     ];
