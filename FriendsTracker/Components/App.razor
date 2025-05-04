@@ -45,8 +45,7 @@
 
                 tooltip: {
                     formatter: function () {
-                        @* return eloToRankString(this.y) + '</b><br>on ' + (new Date(dateArray[this.x] * 1000).getMonth() + 1) + '/' + new Date(dateArray[this.x] * 1000).getDate() + '\xa0at\xa0'; *@
-                        return eloToRankString(this.y) + '</b><br>on ' + new Date((dateArray[this.x]- 14400 - 7200 )* 1000).toLocaleDateString() + '<br>at\xa0' + new Date((dateArray[this.x]- 14400 - 7200 )* 1000).toLocaleTimeString();
+                        return eloToRankString(this.y) + '</b><br>on ' + new Date((dateArray[this.x]- 14400 - 7200 )* 1000).toLocaleDateString() + '<br>at ' + new Date((dateArray[this.x]- 14400 - 7200 )* 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                     },
                     backgroundColor: {
                         linearGradient: [0, 0, 0, 60],

@@ -31,7 +31,6 @@ public partial class Ranks : IDisposable
         "mr%20wolf/teror",
         "Stroup22/na1", 
         "magisa/solo",
-        "Validation/hater",
         "diane%20foxington/brewt",
     ];
 
@@ -178,14 +177,13 @@ public partial class Ranks : IDisposable
             
         var filter = Builders<CustomStats>.Filter.Empty; // Update all documents or specify a filter
         await collection.UpdateOneAsync(filter, update);
+        Console.WriteLine($"Updated stats");
     }
 
     public async Task updateMongoRanksAsync()
     {
         _isLoading = true;
         var collection = GetGenericCollection<GetRankResponse>("rank_test");
-
-
 
         List<string> rank_urls = new List<string>();
         foreach(var player in playerNames)
@@ -196,7 +194,7 @@ public partial class Ranks : IDisposable
         List<string> mmr_urls = new List<string>();
         foreach(var player in playerNames)
         {
-            mmr_urls.Add($"https://api.henrikdev.xyz/valorant/v1/stored-mmr-history/na/{player}");
+            mmr_urls.Add($"https://api.henrikdev.xyz/valorant/v1/mmr-history/na/{player}");
         }
 
         var updatedRanks = await GetPlayerRanksHTTPAsync(mmr_urls, rank_urls);
@@ -233,8 +231,10 @@ public partial class Ranks : IDisposable
         var mmr_requests = mmr_urls.Select(client.GetStringAsync).ToList();
         await Task.WhenAll(mmr_requests);
 
+        // Console.WriteLine("got mmr responses");
         var rank_requests = rank_urls.Select(client.GetStringAsync).ToList();
         await Task.WhenAll(rank_requests);
+        // Console.WriteLine("got rank responses");
 
         var mmr_responses = mmr_requests.Select(task => MMRHistoryResponse.FromJson(task.Result)).ToList();
         var rank_responses = rank_requests.Select(task => GetRankResponse.FromJson(task.Result)).ToList();
@@ -249,7 +249,7 @@ public partial class Ranks : IDisposable
                     var filteredData = mmr.Data.Where(d => d.Season.Id == currentSeasonId).ToArray();
 
                     // If no Datum matches the targetSeasonId, set Data to an empty array
-                    mmr.Data = filteredData.Any() ? filteredData : Array.Empty<Datum>();
+                    // mmr.Data = filteredData.Any() ? filteredData : Array.Empty<Datum>();
                 }
         }
 
